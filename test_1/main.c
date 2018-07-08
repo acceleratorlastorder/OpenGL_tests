@@ -122,7 +122,12 @@ int main() {
   openGL_program_ctx.VertexArray_s.push(&openGL_program_ctx.VertexArray_s, 0.0f);
   openGL_program_ctx.VertexArray_s.push(&openGL_program_ctx.VertexArray_s, 1.0f);
 
-  //printf("openGL_program_ctx %d\n", sizeof(openGL_program_ctx.VertexArray_s.array));
+  initArrayOfVertex_t(&openGL_program_ctx.ArrayOfVertex_s, 0);
+  openGL_program_ctx.ArrayOfVertex_s.push(&openGL_program_ctx.ArrayOfVertex_s, &openGL_program_ctx.VertexArray_s);
+
+  printf("wtf 666: %f\n", openGL_program_ctx.ArrayOfVertex_s.VertexArray_s[0] -> array[2]);
+
+  //printf("wtf: %f\n", openGL_program_ctx.ArrayOfVertex_s[0].VertexArray_s.array[2]);
 
 
   loadObject(&vao, &vbufferObj, &shaderProgram, &fragmentShader, &vertexShader,

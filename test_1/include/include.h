@@ -28,13 +28,14 @@ struct ArrayOfVertex_t{
   int length;
   int sizeOfItems;
   void (*initArray)(ArrayOfVertex_t *, int size);
-  void (*push)(ArrayOfVertex_t *, VertexArray_t arr);
-  VertexArray_t **array;
+  void (*push)(ArrayOfVertex_t *, VertexArray_t *verArr);
+  VertexArray_t **VertexArray_s;
 };
 
 //Creating a context to easily share necessary variable with any fucdtion function
 struct Context_t {
   VertexArray_t VertexArray_s;
+  ArrayOfVertex_t ArrayOfVertex_s;
 };
 
 char usableVertex[3][50];
@@ -42,6 +43,10 @@ char usableVertex[3][50];
 void VertexArray_t_push(VertexArray_t *self, GLfloat el);
 void VertexArray_t_initArray(VertexArray_t *self, int size);
 void initVertexArray_t(VertexArray_t *Array, int size);
+
+void ArrayOfVertex_t_push(ArrayOfVertex_t *self, VertexArray_t *verArr);
+void ArrayOfVertex_t_initArray(ArrayOfVertex_t *self, int size);
+void initArrayOfVertex_t(ArrayOfVertex_t *Array, int size);
 
 
 void getVertexs (Context_t *ctx);

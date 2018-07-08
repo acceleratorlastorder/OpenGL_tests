@@ -3,7 +3,7 @@
 
 
 double getMsBetweenFrame();
-void getFile(char *charArray, char *filePath);
+void readFile(char *charArray, char *filePath);
 void fillStringWithNull(char *stringToReset);
 void removeStringFromMemory(char *stringToReset);
 void error_callback(int error, const char *description);

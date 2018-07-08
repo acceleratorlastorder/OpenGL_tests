@@ -16,7 +16,7 @@ const GLuint width = 800, height = 600;
 
 double getMsBetweenFrame() { return (1 / framePerSec); }
 
-void getFile(char *charArray, char *filePath) {
+void readFile(char *charArray, char *filePath) {
   int c;
   FILE *file;
   file = fopen(filePath, "r");
@@ -101,7 +101,7 @@ GLuint loadShaders() {
 
   // get shader
   //printf("filePath: %s\n", filePath);
-  getFile(fileContent, filePath);
+  readFile(fileContent, filePath);
   GLuint shaderProgram = glCreateProgram();
   compileShader(fileContent, &shaderProgram);
 
@@ -111,7 +111,7 @@ GLuint loadShaders() {
   // get fragment shader
   filePath = "include/shaders/fragmentShader.frag";
   //printf("fileContent: %s\n", filePath);
-  getFile(fileContent, filePath);
+  readFile(fileContent, filePath);
   compileFragmentShader(fileContent, &shaderProgram);
 
   // remove string

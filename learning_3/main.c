@@ -23,13 +23,11 @@ void setBootstrapConfig(void) {
 
 void loadObject(GLuint *vao, GLuint *vbufferObj, GLuint *shaderProgram,
                 GLuint *fragmentShader, GLuint *vertexShader, GLint *posAttrib,
-                GLint *colAttrib, Context_t *openGL_program_ctx) {
-  glGenVertexArrays(1, vao);
-  glBindVertexArray(*vao);
+                GLint *colAttrib, GLuint *ebo, Context_t *openGL_program_ctx) {
 
-  uploadVertexOntoTheGPU(vbufferObj, openGL_program_ctx);
+  glGenBuffers(1, ebo);
+  uploadVertexOntoTheGPU(vao, vbufferObj, ebo, openGL_program_ctx);
   loadShaders(shaderProgram, fragmentShader, vertexShader);
-
   setShadersAttributes(shaderProgram, posAttrib, colAttrib);
   return;
 };
@@ -63,17 +61,13 @@ int main() {
   glfwMakeContextCurrent(window);
   gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 
-
-
-  addString();
   time_t startLoopTime, endLoopTime;
   double msBetweenFrame = getMsBetweenFrame();
   printf("msBetweenFrame: %lf\n", msBetweenFrame);
 
 
-
-
   GLuint vao;
+  GLuint ebo;
   GLuint vbufferObj;
   GLuint shaderProgram;
   GLuint fragmentShader;
@@ -112,7 +106,7 @@ int main() {
 
 
   loadObject(&vao, &vbufferObj, &shaderProgram, &fragmentShader, &vertexShader,
-             &posAttrib, &colAttrib, &openGL_program_ctx);
+             &posAttrib, &colAttrib, &ebo, &openGL_program_ctx);
 
   /* Loop until the user closes the window */
   while (!glfwWindowShouldClose(window)) {
@@ -125,7 +119,9 @@ int main() {
     // glClear(GL_COLOR_BUFFER_BIT);
 
     // Draw a triangle from the 3 vertices
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    //glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
     /* Swap front and back buffers */
     glfwSwapBuffers(window);

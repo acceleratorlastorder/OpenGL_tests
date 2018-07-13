@@ -1,0 +1,7 @@
+TESTED UNDER OpenGL 4.5
+
+working on:
+
+GTX 1050
+GTX 1060
+GTX 1070TI

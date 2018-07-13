@@ -1,0 +1,52 @@
+
+Version with mwindows which link all "-lkernel32 -luser32 -lgdi32 -lws2_32" and some other more
+gcc main.c -lopengl32 -lglfw3 -mwindows
+
+full version
+gcc main.c -lopengl32 -lglfw3 -lkernel32 -luser32 -lgdi32 -lws2_32 -O3 -march="znver1"
+
+
+
+custom set working settings(Note: znver1 used here since this code have been built on a computer with a ryzen CPU change/remove this setting for use on a non ZEN 1 architecture ):
+
+if ryzen CPU:
+	-march="znver1"
+
+
+//USE THIS TO GET A WINDOW ONLY
+gcc main.c src/glad.c -lopengl32 -lglfw3 -mwindows -O3 -std=c11 -o learning_1
+
+
+//USE THIS TO GET A WINDOW AND A CONSOLE FOR DEBUG
+gcc main.c src/filesManagement/filesManager.c src/vertexManagement/vertexs.c src/shadersManagement/shadersManager.c src/objectManagement/opperation.c src/glad.c -DdebugBuild -lopengl32 -lglfw3 -lkernel32 -luser32 -lgdi32 -lws2_32 -Wall -O3 -std=c11 -o learning_3
+
+
+
+files to include
+
+src/filesManagement/filesManager.c
+src/vertexManagement/vertexs.c
+src/shadersManagement/shaderManager.c
+src/objectManagement/opperation.c
+src/glad.c
+
+args to include
+
+if(debug){
+	-DdebugBuild
+}
+if(release){
+	-DreleaseBuild
+}
+-lopengl32
+-lglfw3
+-lkernel32
+-luser32
+-lgdi32
+-lws2_32
+-O3
+-std=c11
+if(ryzen){
+	-march="znver1"
+}
+-o learning_2

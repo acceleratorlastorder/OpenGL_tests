@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 #include <time.h>
 #include <windows.h>
@@ -21,16 +22,12 @@ void setBootstrapConfig(void) {
   return;
 };
 
-void loadObject(GLuint *vao, GLuint *vbufferObj, GLuint *shaderProgram,
-                GLuint *fragmentShader, GLuint *vertexShader, GLint *posAttrib,
-                GLint *colAttrib, Context_t *openGL_program_ctx) {
-  glGenVertexArrays(1, vao);
-  glBindVertexArray(*vao);
+void loadObject(Context_t *openGL_program_ctx) {
 
-  uploadVertexOntoTheGPU(vbufferObj, openGL_program_ctx);
-  loadShaders(shaderProgram, fragmentShader, vertexShader);
-
-  setShadersAttributes(shaderProgram, posAttrib, colAttrib);
+  glGenBuffers(1, &openGL_program_ctx -> ebo);
+  uploadVertexOntoTheGPU(openGL_program_ctx);
+  loadShaders(&openGL_program_ctx -> shaderProgram, &openGL_program_ctx -> fragmentShader, &openGL_program_ctx -> vertexShader);
+  setShadersAttributes(&openGL_program_ctx -> shaderProgram, &openGL_program_ctx -> posAttrib, &openGL_program_ctx -> colAttrib);
   return;
 };
 
@@ -63,23 +60,9 @@ int main() {
   glfwMakeContextCurrent(window);
   gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 
-
-
-  addString();
   time_t startLoopTime, endLoopTime;
   double msBetweenFrame = getMsBetweenFrame();
   printf("msBetweenFrame: %lf\n", msBetweenFrame);
-
-
-
-
-  GLuint vao;
-  GLuint vbufferObj;
-  GLuint shaderProgram;
-  GLuint fragmentShader;
-  GLuint vertexShader;
-  GLint posAttrib;
-  GLint colAttrib;
 
   Context_t openGL_program_ctx;
 
@@ -111,8 +94,7 @@ int main() {
   //printf("wtf: %f\n", openGL_program_ctx.ArrayOfVertex_s[0].VertexArray_s.array[2]);
 
 
-  loadObject(&vao, &vbufferObj, &shaderProgram, &fragmentShader, &vertexShader,
-             &posAttrib, &colAttrib, &openGL_program_ctx);
+  loadObject(&openGL_program_ctx);
 
   /* Loop until the user closes the window */
   while (!glfwWindowShouldClose(window)) {
@@ -125,7 +107,9 @@ int main() {
     // glClear(GL_COLOR_BUFFER_BIT);
 
     // Draw a triangle from the 3 vertices
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    //glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
     /* Swap front and back buffers */
     glfwSwapBuffers(window);
@@ -141,13 +125,13 @@ int main() {
     }
   }
 
-  glDeleteProgram(shaderProgram);
-  glDeleteShader(fragmentShader);
-  glDeleteShader(vertexShader);
+  glDeleteProgram(openGL_program_ctx.shaderProgram);
+  glDeleteShader(openGL_program_ctx.fragmentShader);
+  glDeleteShader(openGL_program_ctx.vertexShader);
 
-  glDeleteBuffers(1, &vbufferObj);
+  glDeleteBuffers(1, &openGL_program_ctx.vbufferObj);
 
-  glDeleteVertexArrays(1, &vao);
+  glDeleteVertexArrays(1, &openGL_program_ctx.vao);
 
   glfwTerminate();
   return 0;

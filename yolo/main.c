@@ -35,7 +35,7 @@ void VertexArray_t_push(struct VertexArray_t *self, GLfloat el) {
 }
 void VertexArray_t_initArray(struct VertexArray_t *self, size_t size) {
   self->length = size;
-  self->array = malloc(size * sizeof(float));
+  self->array = malloc(size * sizeof(GLfloat));
   self->sizeOfItems = sizeof(self->array);
   self->sizeOfStructure = sizeof(*self);
   return;
@@ -96,7 +96,7 @@ int main() {
 
   start_t = clock();
   printf("Starting of the program, start_t = %ld\n", start_t);
-  
+
   for (size_t i = 0; i < 7000; i++) {
     VertexArray_t_push(&testGLfloatArrStruct, 654646.56f);
   }

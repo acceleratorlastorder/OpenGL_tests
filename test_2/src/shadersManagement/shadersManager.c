@@ -48,16 +48,12 @@ void compileFragmentShader(char *fragmentShaderSource, GLuint *shaderProgram,
   GLint status;
   glGetShaderiv(*fragmentShader, GL_COMPILE_STATUS, &status);
 
+#ifdef debugBuild
   if (status == GL_TRUE) {
-#ifdef debugBuild
     printf("fragment shader is corectly loaded\n");
-#endif
   } else {
-#ifdef debugBuild
     printf("fragment shader got problem\n");
-#endif
   }
-#ifdef debugBuild
   char buffer[512];
   glGetShaderInfoLog(*fragmentShader, 512, NULL, buffer);
   printf("log for fragment the shader: %s\n", buffer);
@@ -68,7 +64,7 @@ void compileFragmentShader(char *fragmentShaderSource, GLuint *shaderProgram,
 void loadShaders(GLuint *shaderProgram, GLuint *fragmentShader,
                  GLuint *vertexShader) {
   char fileContent[666];
-  char *filePath = "include/shaders/vertexShader.glsl";
+  char *filePath = "includes/shaders/vertexShader.glsl";
 
   // get shader
   // printf("filePath: %s\n", filePath);
@@ -81,7 +77,7 @@ void loadShaders(GLuint *shaderProgram, GLuint *fragmentShader,
   fillStringWithNull(fileContent);
 
   // get fragment shader
-  filePath = "include/shaders/fragmentShader.frag";
+  filePath = "includes/shaders/fragmentShader.frag";
   // printf("fileContent: %s\n", filePath);
   readFile(fileContent, filePath);
 
@@ -101,7 +97,8 @@ void loadShaders(GLuint *shaderProgram, GLuint *fragmentShader,
   return;
 }
 
-void setShadersAttributes(GLuint *shaderProgram, GLint *posAttrib, GLint *colAttrib) {
+void setShadersAttributes(GLuint *shaderProgram, GLint *posAttrib,
+                          GLint *colAttrib) {
 
   *posAttrib = glGetAttribLocation(*shaderProgram, "position");
   glEnableVertexAttribArray(*posAttrib);

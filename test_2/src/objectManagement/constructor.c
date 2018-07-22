@@ -3,16 +3,6 @@
 
 #include "includes/constructor.h"
 
-/********************************************************
- *  gcc constructor.c -g -Wall -Wextra -std=c11 -O3 -g  *
- ********************************************************/
-
-#include "stdio.h"
-#include "stdlib.h"
-#include <time.h>
-
-#include "constructor.h"
-
 void VertexArray_t_allocate_effective_size(struct VertexArray_t *self) {
   if (self->array == NULL && self->length != 0) {
     puts(

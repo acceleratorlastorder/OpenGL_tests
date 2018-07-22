@@ -1,4 +1,3 @@
-
 //check how to make dynamc array
 /*GLfloat *verticesArray[] = {
   {
@@ -27,4 +26,4 @@ struct vertex {
 
 
 void getVertexs (Context_t *ctx);
-void uploadVertexOntoTheGPU(GLuint *vbufferObj, Context_t *ctx);
+void uploadVertexOntoTheGPU(Context_t *ctx);

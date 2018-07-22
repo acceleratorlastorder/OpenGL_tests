@@ -9,7 +9,8 @@ void readFile(char *charArray, char *filePath) {
     int i = 0;
     while ((c = getc(file)) != EOF) {
       charArray[i] = c;
-      // putchar(c);
+      //For debug only if need to see oa print of the file
+      putchar(c);
       i++;
     }
     fclose(file);

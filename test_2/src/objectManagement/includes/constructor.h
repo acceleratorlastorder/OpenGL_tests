@@ -1,7 +1,8 @@
-/*
-#define GL_FLOAT 0x1406
+typedef int GLint;
+typedef unsigned int GLuint;
 typedef float GLfloat;
-*/
+
+
 typedef struct VertexArray_t VertexArray_t;
 typedef struct ArrayOfVertex_t ArrayOfVertex_t;
 typedef struct Context_t Context_t, *ContextType;

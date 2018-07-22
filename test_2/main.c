@@ -27,13 +27,13 @@ void setBootstrapConfig(void) {
 void loadObject(GLuint *vao, GLuint *vbufferObj, GLuint *shaderProgram,
                 GLuint *fragmentShader, GLuint *vertexShader, GLint *posAttrib,
                 GLint *colAttrib, Context_t *openGL_program_ctx) {
-  glGenVertexArrays(1, vao);
-  glBindVertexArray(*vao);
+  glGenVertexArrays(1, &openGL_program_ctx->vao);
+  glBindVertexArray(openGL_program_ctx->vao);
 
-  uploadVertexOntoTheGPU(vbufferObj, openGL_program_ctx);
-  loadShaders(shaderProgram, fragmentShader, vertexShader);
+  uploadVertexOntoTheGPU(&openGL_program_ctx->vbufferObj, &openGL_program_ctx->openGL_program_ctx);
+  loadShaders(&openGL_program_ctx->shaderProgram, &openGL_program_ctx->fragmentShader, &openGL_program_ctx->vertexShader);
 
-  setShadersAttributes(shaderProgram, posAttrib, colAttrib);
+  setShadersAttributes(&openGL_program_ctx->shaderProgram, &openGL_program_ctx->posAttrib, &openGL_program_ctx->colAttrib);
   return;
 };
 

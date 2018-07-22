@@ -9,16 +9,19 @@ typedef struct Context_t Context_t, *ContextType;
 /* Array of GLfloat since float is different depending the system it's better to
  use GLfloat to increase the portability of the program*/
 struct VertexArray_t {
-  int length;
-  int sizeOfItems;
-  float *array;
+  size_t length;
+  size_t usedSize;
+  size_t sizeOfStructure;
+  size_t sizeOfItems;
+  GLfloat *array;
 };
-
 
 //Array of vertex Array
 struct ArrayOfVertex_t {
-  int length;
-  int sizeOfItems;
+  size_t length;
+  size_t sizeOfStructure;
+  size_t sizeOfItems;
+  size_t fullSizeOfArray;
   VertexArray_t *VertexArray_s;
 };
 
@@ -29,8 +32,10 @@ struct Context_t {
 };
 
 /*  DATA TYPE management FUNCTIONS  */
-void VertexArray_t_push(VertexArray_t *self, float el);
-void VertexArray_t_initArray(VertexArray_t *self, int size);
-void VertexArray_t_freeIt(VertexArray_t *self);
-void ArrayOfVertex_t_push(ArrayOfVertex_t *self, VertexArray_t *verArr_s);
-void ArrayOfVertex_t_initArray(ArrayOfVertex_t *self, int size);
+void VertexArray_t_allocate_effective_size(struct VertexArray_t *self);
+void VertexArray_t_push(struct VertexArray_t *self, GLfloat el);
+void VertexArray_t_initArray(struct VertexArray_t *self, size_t size);
+void VertexArray_t_freeIt(struct VertexArray_t *self);
+void ArrayOfVertex_t_push(struct ArrayOfVertex_t *self, struct VertexArray_t *verArr_s);
+void ArrayOfVertex_t_freeIt(struct ArrayOfVertex_t *self);
+void ArrayOfVertex_t_initArray(struct ArrayOfVertex_t *self, size_t size);

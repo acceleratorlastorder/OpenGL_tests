@@ -16,13 +16,14 @@ struct ArrayOfVertex_t {
   size_t length;
   size_t sizeOfStructure;
   size_t sizeOfItems;
+  size_t fullSizeOfArray;
   VertexArray_t *VertexArray_s;
 };
 
+void VertexArray_t_allocate_effective_size(struct VertexArray_t *self);
 void VertexArray_t_push(struct VertexArray_t *self, GLfloat el);
 void VertexArray_t_initArray(struct VertexArray_t *self, size_t size);
 void VertexArray_t_freeIt(struct VertexArray_t *self);
-void ArrayOfVertex_t_push(struct ArrayOfVertex_t *self,
-                          struct VertexArray_t *verArr_s);
+void ArrayOfVertex_t_push(struct ArrayOfVertex_t *self, struct VertexArray_t *verArr_s);
+void ArrayOfVertex_t_freeIt(struct ArrayOfVertex_t *self);
 void ArrayOfVertex_t_initArray(struct ArrayOfVertex_t *self, size_t size);
-void VertexArray_t_allocate_effective_size(struct VertexArray_t *self);

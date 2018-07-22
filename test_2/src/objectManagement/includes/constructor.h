@@ -25,8 +25,16 @@ struct ArrayOfVertex_t {
   VertexArray_t *VertexArray_s;
 };
 
-//Creating a context to easily share necessary variable with any fucdtion function
+//Creating a context to easily share necessary variable with any function
 struct Context_t {
+  GLuint vao;
+  GLuint ebo;
+  GLuint vbufferObj;
+  GLuint shaderProgram;
+  GLuint fragmentShader;
+  GLuint vertexShader;
+  GLint posAttrib;
+  GLint colAttrib;
   VertexArray_t VertexArray_s;
   ArrayOfVertex_t ArrayOfVertex_s;
 };

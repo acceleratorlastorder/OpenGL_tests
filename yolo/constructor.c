@@ -125,13 +125,6 @@ void VertexArray_t_freeIt(struct VertexArray_t *self) {
 void ArrayOfVertex_t_push(struct ArrayOfVertex_t *self,
                           struct VertexArray_t *verArr_s) {
 
-  printf("sizeof(verArr_s) %I64d\n", sizeof(*verArr_s));
-
-  printf("sizeof(verArr_s) %I64d\n", sizeof(verArr_s->array));
-
-  printf("sizeof(verArr_s) %I64d\n",
-         (verArr_s->length * sizeof(verArr_s->array[0])));
-
   self->sizeOfItems += sizeof(*verArr_s);
 
   // Create temp value to keep the original array safe and avoid memory leak
@@ -157,7 +150,6 @@ void ArrayOfVertex_t_push(struct ArrayOfVertex_t *self,
   // Assign freshly allocated array with value from the old array
   for (size_t i = verArr_s->length; i-- > 0;) {
     self->VertexArray_s[self->length].array[i] = verArr_s->array[i];
-    printf("self->VertexArray_s[%I64d].array[%I64d] %f\n", self->length, i, self->VertexArray_s[self->length].array[i]);
   }
 
   // As we just added an element we increment it by one
@@ -174,10 +166,13 @@ void ArrayOfVertex_t_push(struct ArrayOfVertex_t *self,
 }
 
 void ArrayOfVertex_t_freeIt(struct ArrayOfVertex_t *self) {
+  // First of all i free all memory block each array pointer possess
   for (size_t i = self->length; i-- > 0;) {
     VertexArray_t_freeIt(&self->VertexArray_s[i]);
   }
 
+  // Then i simply free the vertexArray_s, as i freed all array inside i just
+  // have to free the container array
   free(self->VertexArray_s);
   self->length = 0;
   self->sizeOfItems = 0;
@@ -213,7 +208,7 @@ int main() {
   start_t = clock();
   printf("Starting of the program, start_t = %ld\n", start_t);
   for (size_t j = 0; j < 5; j++) {
-    for (size_t i = 0; i < 5; i++) {
+    for (size_t i = 0; i < 10000000; i++) {
       // VertexArray_t_push(&testGLfloatArrStruct, 654646.56f);
       // arrayTestStruct_t_push(&testArr, i + 666.56f);
       VertexArray_t_push_with_margin(&testGLfloatArrStruct, i + 666.56f);
@@ -269,6 +264,8 @@ int main() {
          testArrayOfGLfloatArrStruct.VertexArray_s[0].array[1]);
   printf("testArrayOfGLfloatArrStruct.VertexArray_s[0].array[2] %f\n",
          testArrayOfGLfloatArrStruct.VertexArray_s[0].array[2]);
+
+  ArrayOfVertex_t_freeIt(&testArrayOfGLfloatArrStruct);
 
   printf("ENNNND !\n");
   scanf("yolo \n");

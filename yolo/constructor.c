@@ -1,6 +1,6 @@
-/*
-gcc constructor.c -g -Wall -Wextra -ansi -pedantic -std=c11 -O3 -g
-*/
+/********************************************************
+ *  gcc constructor.c -g -Wall -Wextra -std=c11 -O3 -g  *
+ ********************************************************/
 
 #include "stdio.h"
 #include "stdlib.h"
@@ -99,15 +99,16 @@ void VertexArray_t_push_with_margin(struct VertexArray_t *self, GLfloat el) {
 }
 
 void VertexArray_t_initArray(struct VertexArray_t *self, size_t size) {
-  self->length = size;
-  self->usedSize = 0;
-  self->array = malloc(size * sizeof(GLfloat));
+  self->sizeOfItems = size * sizeof(GLfloat);
+  self->array = malloc(self->sizeOfItems);
   if (self->array == NULL) {
     puts("memory allocation failed at VertexArray_t_initArray()");
+    self->sizeOfItems = 0;
     return;
   }
-  self->sizeOfItems = 0;
-  self->sizeOfStructure = sizeof(*self);
+  self->length = size;
+  self->usedSize = 0;
+  self->sizeOfStructure = sizeof(*self) + self->sizeOfItems;
 
   return;
 }
@@ -131,9 +132,7 @@ void ArrayOfVertex_t_push(struct ArrayOfVertex_t *self,
   printf("sizeof(verArr_s) %I64d\n",
          (verArr_s->length * sizeof(verArr_s->array[0])));
 
-  self->VertexArray_s = realloc(
-      self->VertexArray_s,
-      sizeof(*verArr_s) + (verArr_s->length * sizeof(verArr_s->array[0])));
+  self->VertexArray_s = realloc(self->VertexArray_s, );
 
   // I give all property of the given structure into the new one
   self->VertexArray_s[self->length] = *verArr_s;
@@ -162,56 +161,16 @@ void ArrayOfVertex_t_push(struct ArrayOfVertex_t *self,
 }
 
 void ArrayOfVertex_t_initArray(struct ArrayOfVertex_t *self, size_t size) {
-  self->VertexArray_s = malloc(size * sizeof(VertexArray_t));
+  self->sizeOfItems = size * sizeof(VertexArray_t);
+  self->VertexArray_s = malloc(self->sizeOfItems);
+  if (self->VertexArray_s == NULL) {
+    puts("memory allocation failed at ArrayOfVertex_t_initArray()");
+    self->sizeOfItems = 0;
+    return;
+  }
   self->length = size;
-  self->sizeOfItems = sizeof(*self);
+  self->sizeOfStructure = sizeof(*self) + self->sizeOfItems;
   return;
-}
-
-typedef struct arrayTestStruct_t arrayTestStruct_t;
-struct arrayTestStruct_t {
-  size_t length;
-  GLfloat *array;
-};
-
-int arrayTestStruct_t_freeIt(arrayTestStruct_t *self) {
-  free(self->array);
-  self->array = NULL;
-  self->length = 0;
-  return 0;
-}
-
-int arrayTestStruct_t_initArray(arrayTestStruct_t *self, int size) {
-  self->array = malloc(size * sizeof(GLfloat));
-  if (self->array == NULL) {
-    puts("couldn't allocate the memory in init Array !!");
-    return 666;
-  } else {
-    self->length = size;
-    return 0;
-  }
-}
-
-int arrayTestStruct_t_push(arrayTestStruct_t *self, GLfloat element) {
-  if (self->array != NULL) {
-    self->array =
-        realloc(self->array, self->length * sizeof(GLfloat) + sizeof(element));
-    if (self->array == NULL) {
-      puts("couldn't allocate the memory to push in the function "
-           "arrayTestStruct_t_push()!!");
-      arrayTestStruct_t_freeIt(self);
-      return 666;
-    } else {
-      self->array[self->length] = element;
-      self->length += 1;
-      return 0;
-    }
-  } else {
-    puts("the pointer \"self->array\" is null in the function "
-         "arrayTestStruct_t_push() !! Can't push anything there");
-    arrayTestStruct_t_freeIt(self);
-    return 666;
-  }
 }
 
 int main() {
@@ -228,14 +187,13 @@ int main() {
   start_t = clock();
   printf("Starting of the program, start_t = %ld\n", start_t);
   for (size_t j = 0; j < 1; j++) {
-    for (size_t i = 0; i < 100000000; i++) {
+    for (size_t i = 0; i < 1000000000; i++) {
       // VertexArray_t_push(&testGLfloatArrStruct, 654646.56f);
       // arrayTestStruct_t_push(&testArr, i + 666.56f);
       VertexArray_t_push_with_margin(&testGLfloatArrStruct, i + 666.56f);
       // printf("testArr-> array[%d]%f\n", i, testArr.array[i]);
     }
     printf("yolo !\n");
-    // ArrayOfVertex_t_push(&testArrayOfGLfloatArrStruct, &testGLfloatArrStruct);
     printf("size of length: %I64d\n", testGLfloatArrStruct.length);
     printf("size of structure: %I64d\n", testGLfloatArrStruct.sizeOfStructure);
     printf("size of items: %I64d\n", testGLfloatArrStruct.sizeOfItems);
@@ -250,11 +208,13 @@ int main() {
            testGLfloatArrStruct.sizeOfStructure);
     printf("size of items after effective size: %I64d\n",
            testGLfloatArrStruct.sizeOfItems);
+    ArrayOfVertex_t_push(&testArrayOfGLfloatArrStruct, &testGLfloatArrStruct);
     printf("free !\n");
     VertexArray_t_freeIt(&testGLfloatArrStruct);
     printf("size of structure after free: %I64d\n",
            testGLfloatArrStruct.sizeOfStructure);
-    printf("size of items after free: %I64d\n", testGLfloatArrStruct.sizeOfItems);
+    printf("size of items after free: %I64d\n",
+           testGLfloatArrStruct.sizeOfItems);
     printf("Re-init !\n");
     VertexArray_t_initArray(&testGLfloatArrStruct, 0);
     printf("Re-inited !\n");

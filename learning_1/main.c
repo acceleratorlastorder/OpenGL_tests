@@ -12,7 +12,7 @@
 #define framePerSec 30.0
 
 // Window dimensions
-const GLuint width = 800, height = 600;
+const GLuint width = 1280, height = 720;
 
 double getMsBetweenFrame() { return (1 / framePerSec); }
 

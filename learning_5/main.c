@@ -10,6 +10,8 @@
 
 #include "src/objectManagement/includes/constructor.h"
 #include "src/vertexManagement/includes/vertexs.h"
+#include "src/texturesManagement/includes/texturesManagement.h"
+
 
 screenRes monitorRes = {.width = 800, .height = 600};
 
@@ -25,7 +27,7 @@ void setBootstrapConfig(void) {
 };
 
 void loadObject(Context_t *openGL_program_ctx) {
-
+  getTexture(openGL_program_ctx);
   glGenBuffers(1, &openGL_program_ctx -> ebo);
   uploadVertexOntoTheGPU(openGL_program_ctx);
   loadShaders(&openGL_program_ctx -> shaderProgram, &openGL_program_ctx -> fragmentShader, &openGL_program_ctx -> vertexShader);
@@ -92,7 +94,7 @@ int main() {
   ArrayOfVertex_t_push(&openGL_program_ctx.ArrayOfVertex_s, &openGL_program_ctx.VertexArray_s);
 
   VertexArray_t_freeIt(&openGL_program_ctx.VertexArray_s);
-  
+
   for (size_t i = 0; i < openGL_program_ctx.ArrayOfVertex_s.VertexArray_s[0].usedSize; i++) {
     printf("openGL_program_ctx.ArrayOfVertex_s.VertexArray_s[0].array[%I64d]: %f\n", i, openGL_program_ctx.ArrayOfVertex_s.VertexArray_s[0].array[i]);
   }

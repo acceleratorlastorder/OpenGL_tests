@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <time.h>
 
 void readFile(char *charArray, char *filePath) {
   int c;
@@ -10,7 +9,7 @@ void readFile(char *charArray, char *filePath) {
     while ((c = getc(file)) != EOF) {
       charArray[i] = c;
       //For debug only if need to see oa print of the file
-      putchar(c);
+      //putchar(c);
       i++;
     }
     fclose(file);

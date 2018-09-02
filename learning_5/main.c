@@ -8,6 +8,8 @@
 
 #include "includes/include.h"
 
+#include "src/filesManagement/pictureManagement/includes/getBmp_textures.h"
+
 #include "src/objectManagement/includes/constructor.h"
 #include "src/vertexManagement/includes/vertexs.h"
 #include "src/texturesManagement/includes/texturesManagement.h"
@@ -53,8 +55,7 @@ int main() {
     monitorIsInFullScreen = glfwGetPrimaryMonitor();
   }
 
-  window = glfwCreateWindow(monitorRes.width, monitorRes.height, "OpenGL_test",
-  monitorIsInFullScreen, NULL);
+  window = glfwCreateWindow(monitorRes.width, monitorRes.height, "OpenGL_test", monitorIsInFullScreen, NULL);
   printf("loadObject\n");
   if (!window) {
     glfwTerminate();
@@ -103,6 +104,10 @@ int main() {
 
 
   loadObject(&openGL_program_ctx);
+
+  GLuint Texture = loadBMP_custom("assets/images/textures/Carbon_03.bmp");
+
+  printf("TextureID: %u\n", Texture);
 
   /* Loop until the user closes the window */
   while (!glfwWindowShouldClose(window)) {

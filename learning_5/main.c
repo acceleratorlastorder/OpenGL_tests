@@ -8,8 +8,6 @@
 
 #include "includes/include.h"
 
-#include "src/filesManagement/pictureManagement/includes/getBmp_textures.h"
-
 #include "src/objectManagement/includes/constructor.h"
 #include "src/vertexManagement/includes/vertexs.h"
 #include "src/texturesManagement/includes/texturesManagement.h"
@@ -33,7 +31,7 @@ void loadObject(Context_t *openGL_program_ctx) {
   glGenBuffers(1, &openGL_program_ctx -> ebo);
   uploadVertexOntoTheGPU(openGL_program_ctx);
   loadShaders(&openGL_program_ctx -> shaderProgram, &openGL_program_ctx -> fragmentShader, &openGL_program_ctx -> vertexShader);
-  setShadersAttributes(&openGL_program_ctx -> shaderProgram, &openGL_program_ctx -> posAttrib, &openGL_program_ctx -> colAttrib);
+  setShadersAttributes(&openGL_program_ctx -> shaderProgram, &openGL_program_ctx -> posAttrib, &openGL_program_ctx -> colAttrib, &openGL_program_ctx -> tex);
   return;
 };
 
@@ -104,10 +102,6 @@ int main() {
 
 
   loadObject(&openGL_program_ctx);
-
-  GLuint Texture = loadBMP_custom("assets/images/textures/Carbon_03.bmp");
-
-  printf("TextureID: %u\n", Texture);
 
   /* Loop until the user closes the window */
   while (!glfwWindowShouldClose(window)) {

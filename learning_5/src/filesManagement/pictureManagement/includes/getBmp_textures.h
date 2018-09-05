@@ -1,1 +1,1 @@
-GLuint loadBMP_custom(const char *imagepath);
+GLuint loadBMP_custom(const char *imagepath, Context_t *ctx);

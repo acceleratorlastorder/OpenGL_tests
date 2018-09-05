@@ -97,8 +97,7 @@ void loadShaders(GLuint *shaderProgram, GLuint *fragmentShader,
   return;
 }
 
-void setShadersAttributes(GLuint *shaderProgram, GLint *posAttrib,
-                          GLint *colAttrib) {
+void setShadersAttributes(GLuint *shaderProgram, GLint *posAttrib, GLint *colAttrib, GLuint *tex) {
 
   *posAttrib = glGetAttribLocation(*shaderProgram, "position");
   glEnableVertexAttribArray(*posAttrib);
@@ -109,6 +108,12 @@ void setShadersAttributes(GLuint *shaderProgram, GLint *posAttrib,
   glEnableVertexAttribArray(*colAttrib);
   glVertexAttribPointer(*colAttrib, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat),
                         (void *)(2 * sizeof(GLfloat)));
+
+  *tex = glGetAttribLocation(*shaderProgram, "texcoord");
+  glEnableVertexAttribArray(*tex);
+  glVertexAttribPointer(*tex, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat),
+                        (void *)(2 * sizeof(GLfloat)));
+
 
   return;
 }

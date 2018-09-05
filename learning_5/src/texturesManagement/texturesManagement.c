@@ -10,10 +10,12 @@
 
 #include "../objectManagement/includes/constructor.h"
 
+#include "../filesManagement/pictureManagement/includes/getBmp_textures.h"
+
 #include "includes/texturesManagement.h"
 
 void getTexture(Context_t *ctx) {
-
+/*
   glGenTextures(1, &ctx->tex);
   glBindTexture(GL_TEXTURE_2D, ctx->tex);
 
@@ -29,6 +31,12 @@ void getTexture(Context_t *ctx) {
   glGenerateMipmap(GL_TEXTURE_2D);
 
   loadTextureImage(ctx);
+
+  */
+
+  loadBMP_custom("assets/images/textures/Carbon_03.bmp", ctx);
+
+
 }
 
 void loadTextureImage(Context_t *ctx) {

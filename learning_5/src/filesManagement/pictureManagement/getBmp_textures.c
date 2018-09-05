@@ -2,13 +2,17 @@
 #include <time.h>
 #include <windows.h>
 
+#include "../../../includes/glad/glad.h"
+
 #include <GLFW/glfw3.h>
 
-#include "../../../src/objectManagement/includes/constructor.h"
+#include "../../../includes/include.h"
+
+#include "../../objectManagement/includes/constructor.h"
 
 #include "includes/getBmp_textures.h"
 
-GLuint loadBMP_custom(const char *imagepath) {
+GLuint loadBMP_custom(const char *imagepath, Context_t *ctx) {
 
   // Data read from the header of the BMP file
   unsigned char header[54]; // Each BMP file begins by a 54-bytes header
@@ -58,12 +62,11 @@ GLuint loadBMP_custom(const char *imagepath) {
   fclose(file);
 
   // Create one OpenGL texture
-  GLuint textureID;
-  glGenTextures(1, &textureID);
+  glGenTextures(1, &ctx->tex);
 
   // "Bind" the newly created texture : all future texture functions will modify
   // this texture
-  glBindTexture(GL_TEXTURE_2D, textureID);
+  glBindTexture(GL_TEXTURE_2D, ctx->tex);
 
   // Give the image to OpenGL
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_BGR_EXT,
@@ -73,7 +76,7 @@ GLuint loadBMP_custom(const char *imagepath) {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
   glGenerateMipmap(GL_TEXTURE_2D);
 
-  return textureID;
+  return ctx->tex;
 }
 
 

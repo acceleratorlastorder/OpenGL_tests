@@ -31,7 +31,7 @@ void loadObject(Context_t *openGL_program_ctx) {
   glGenBuffers(1, &openGL_program_ctx -> ebo);
   uploadVertexOntoTheGPU(openGL_program_ctx);
   loadShaders(&openGL_program_ctx -> shaderProgram, &openGL_program_ctx -> fragmentShader, &openGL_program_ctx -> vertexShader);
-  setShadersAttributes(&openGL_program_ctx -> shaderProgram, &openGL_program_ctx -> posAttrib, &openGL_program_ctx -> colAttrib, &openGL_program_ctx -> tex);
+  setShadersAttributes(&openGL_program_ctx -> shaderProgram, &openGL_program_ctx -> posAttrib, &openGL_program_ctx -> colAttrib, &openGL_program_ctx -> textureID);
   return;
 };
 
@@ -40,6 +40,9 @@ double frand_a_b(double a, double b) {
 };
 
 int main() {
+  //TODO: ADD A LOAD CONF HERE cause it's annoying to recompile just for a conf param lol
+
+
   GLFWwindow *window;
 
   /* Initialize the library */

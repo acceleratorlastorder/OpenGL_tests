@@ -30,7 +30,7 @@ struct ArrayOfVertex_t {
 struct Context_t {
   GLuint vao;
   GLuint ebo;
-  GLuint tex;
+  GLuint textureID;
   GLuint vbufferObj;
   GLuint shaderProgram;
   GLuint fragmentShader;

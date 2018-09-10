@@ -8,6 +8,9 @@
 
 #include "../../includes/include.h"
 
+#include "../objectManagement/includes/constructor.h"
+
+
 /**
 * [Compiling the given shader onto the GPU]
 */
@@ -97,22 +100,20 @@ void loadShaders(GLuint *shaderProgram, GLuint *fragmentShader,
   return;
 }
 
-void setShadersAttributes(GLuint *shaderProgram, GLint *posAttrib, GLint *colAttrib, GLuint *tex) {
+void setShadersAttributes(Context_t *ctx) {
 
-  *posAttrib = glGetAttribLocation(*shaderProgram, "position");
-  glEnableVertexAttribArray(*posAttrib);
-  glVertexAttribPointer(*posAttrib, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat),
-                        0);
+  ctx -> posAttrib = glGetAttribLocation(ctx -> shaderProgram, "position");
+  glEnableVertexAttribArray(ctx -> posAttrib);
+  glVertexAttribPointer(ctx -> posAttrib, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), 0);
 
-  *colAttrib = glGetAttribLocation(*shaderProgram, "color");
-  glEnableVertexAttribArray(*colAttrib);
-  glVertexAttribPointer(*colAttrib, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat),
-                        (void *)(2 * sizeof(GLfloat)));
+  ctx -> colAttrib = glGetAttribLocation(ctx -> shaderProgram, "color");
+  glEnableVertexAttribArray(ctx -> colAttrib);
+  glVertexAttribPointer(ctx -> colAttrib, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void *)(2 * sizeof(GLfloat)));
 
-  *tex = glGetAttribLocation(*shaderProgram, "texcoord");
-  glEnableVertexAttribArray(*tex);
-  glVertexAttribPointer(*tex, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat),
-                        (void *)(2 * sizeof(GLfloat)));
+  glBindVertexArray(ctx -> vao);
+  ctx -> textureID = glGetAttribLocation(ctx -> shaderProgram, "texcoord");
+  glEnableVertexAttribArray(ctx -> textureID);
+  glVertexAttribPointer(ctx -> textureID, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), 0);
 
 
   return;

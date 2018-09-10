@@ -9,6 +9,7 @@
 #include "includes/include.h"
 
 #include "src/objectManagement/includes/constructor.h"
+#include "src/shadersManagement/includes/shadersManager.h"
 #include "src/vertexManagement/includes/vertexs.h"
 #include "src/texturesManagement/includes/texturesManagement.h"
 
@@ -31,7 +32,7 @@ void loadObject(Context_t *openGL_program_ctx) {
   glGenBuffers(1, &openGL_program_ctx -> ebo);
   uploadVertexOntoTheGPU(openGL_program_ctx);
   loadShaders(&openGL_program_ctx -> shaderProgram, &openGL_program_ctx -> fragmentShader, &openGL_program_ctx -> vertexShader);
-  setShadersAttributes(&openGL_program_ctx -> shaderProgram, &openGL_program_ctx -> posAttrib, &openGL_program_ctx -> colAttrib, &openGL_program_ctx -> textureID);
+  setShadersAttributes(openGL_program_ctx);
   return;
 };
 

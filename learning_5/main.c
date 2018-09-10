@@ -42,7 +42,7 @@ double frand_a_b(double a, double b) {
 
 int main() {
   //TODO: ADD A LOAD CONF HERE cause it's annoying to recompile just for a conf param lol
-
+  //TODO: ADD A RELOAD SHADERS function bind to a key or any appropriate action
 
   GLFWwindow *window;
 

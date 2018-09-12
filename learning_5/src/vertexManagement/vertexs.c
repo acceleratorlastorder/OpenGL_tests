@@ -24,6 +24,7 @@ GLfloat triangleColored[] = {
     -0.5f, -0.5f, 0.0f, 0.0f, 1.0f  // Vertex 1 (X, Y, Red, Green, Blue): Blue
 };
 
+size_t triangleColoredSize = 15;
 
 GLfloat cube[] = {
   1.000000f, -1.000000f, -1.000000f,
@@ -61,8 +62,7 @@ glBindBuffer(GL_ARRAY_BUFFER, ctx -> vbufferObj);
 glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
 glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ctx -> ebo);
-glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-    sizeof(elements), elements, GL_STATIC_DRAW);
+glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_STATIC_DRAW);
 
 #ifdef debugBuild
   printf("vbufferObj finished\n");
@@ -70,5 +70,9 @@ glBufferData(GL_ELEMENT_ARRAY_BUFFER,
 };
 
 void getVertexs (Context_t *ctx){
-
+  //TODO: future evol get this from a .obj file or more to construct the vertexs
+  for (size_t i = 0; i < triangleColoredSize; i++) {
+    VertexArray_t_push(&ctx -> VertexArray_s, triangleColored[i]);
+  }
+  return;
 };

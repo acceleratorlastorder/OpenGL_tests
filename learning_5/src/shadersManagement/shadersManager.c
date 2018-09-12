@@ -108,12 +108,12 @@ void setShadersAttributes(Context_t *ctx) {
 
   ctx -> colAttrib = glGetAttribLocation(ctx -> shaderProgram, "color");
   glEnableVertexAttribArray(ctx -> colAttrib);
-  glVertexAttribPointer(ctx -> colAttrib, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void *)(2 * sizeof(GLfloat)));
+  glVertexAttribPointer(ctx -> colAttrib, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void *)(2 * sizeof(GLfloat)));
 
   glBindVertexArray(ctx -> vao);
   ctx -> textureID = glGetAttribLocation(ctx -> shaderProgram, "texcoord");
   glEnableVertexAttribArray(ctx -> textureID);
-  glVertexAttribPointer(ctx -> textureID, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), 0);
+  glVertexAttribPointer(ctx -> textureID, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void *)(2 * sizeof(GLfloat)));
 
 
   return;

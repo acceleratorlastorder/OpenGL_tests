@@ -89,7 +89,9 @@ void loadShaders(GLuint *shaderProgram, GLuint *fragmentShader,
   *fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
   compileFragmentShader(fileContent, shaderProgram, fragmentShader);
 
+  //   attach vertex shader
   glAttachShader(*shaderProgram, *vertexShader);
+  //   attach fragment shader
   glAttachShader(*shaderProgram, *fragmentShader);
   glBindFragDataLocation(*shaderProgram, 0, "outColor");
 

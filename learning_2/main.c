@@ -72,13 +72,14 @@ int main() {
   loadObject(&vao, &vbufferObj, &shaderProgram, &fragmentShader, &vertexShader,
              &posAttrib, &colAttrib);
 
-  // GLint fragColor = glGetUniformLocation(shaderProgram, "fragColor");
+   //GLint fragColor = glGetUniformLocation(shaderProgram, "fragColor");
 
   srand(time(NULL)); // initialisation de rand
-
-  // double r = 0, g = 0, b = 0;
-  // double increaseFactor = 0.001, decreaseFactor = 0.001;
-  // int rHasreachOne = 0, gHasreachOne = 0, bHasreachOne = 0;
+  /*
+   double r = 0, g = 0, b = 0;
+   double increaseFactor = 0.001, decreaseFactor = 0.001;
+   int rHasreachOne = 0, gHasreachOne = 0, bHasreachOne = 0;
+   */
   /* Loop until the user closes the window */
   while (!glfwWindowShouldClose(window)) {
     /* Render here */
@@ -93,9 +94,9 @@ int main() {
 
     /* Swap front and back buffers */
     glfwSwapBuffers(window);
-
-// glUniform3f(fragColor, r, g, b);
 /*
+ glUniform3f(fragColor, r, g, b);
+
 if (rHasreachOne == 0) {
   r = sin(increaseFactor + r);
 } else if (rHasreachOne == 1) {
@@ -125,8 +126,8 @@ if (b < 0) {
   bHasreachOne = 0;
 } else if (b > 1) {
   bHasreachOne = 1;
-}*/
-
+}
+*/
 #ifdef debugBuild
 // printf("r: %f;\ng: %f;\nb: %f\n", r, g, b);
 #endif

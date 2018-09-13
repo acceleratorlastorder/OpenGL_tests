@@ -89,10 +89,7 @@ int main() {
   initArrayOfVertex_t(&openGL_program_ctx.ArrayOfVertex_s, 0);
   openGL_program_ctx.ArrayOfVertex_s.push(&openGL_program_ctx.ArrayOfVertex_s, &openGL_program_ctx.VertexArray_s);
 
-  printf("wtf 666 666 666: %f\n", openGL_program_ctx.ArrayOfVertex_s.VertexArray_s[0] -> array);
-
-  //printf("wtf: %f\n", openGL_program_ctx.ArrayOfVertex_s[0].VertexArray_s.array[2]);
-
+  printf("openGL_program_ctx.ArrayOfVertex_s.VertexArray_s[0] -> array: %f\n", openGL_program_ctx.ArrayOfVertex_s.VertexArray_s[0] -> array);
 
   loadObject(&openGL_program_ctx);
 

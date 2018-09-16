@@ -18,3 +18,4 @@ void fillStringWithNull(char *stringToReset);
 void removeStringFromMemory(char *stringToReset);
 void error_callback(int error, const char *description);
 void setBootstrapConfig(void);
+void clearScreen(void);

@@ -19,15 +19,49 @@ screenRes monitorRes = {.width = 800, .height = 600};
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
   if (action == GLFW_PRESS) {
-    Context_t* obj = (Context_t *)glfwGetWindowUserPointer(window);
+    Context_t* openGL_ctx = (Context_t *)glfwGetWindowUserPointer(window);
     if (key == GLFW_KEY_ESCAPE){
       glfwSetWindowShouldClose(window, GLFW_TRUE);
     }else if (key == GLFW_KEY_F3) {
-      printf("openGL_program_ctx.ArrayOfVertex_s.VertexArray_s[0].array[1]: %f\n", obj->ArrayOfVertex_s.VertexArray_s[0].array[1]);
-      //reloadShaders();
+
+     glDeleteProgram(openGL_ctx -> shaderProgram);
+     glDeleteShader(openGL_ctx -> fragmentShader);
+     glDeleteShader(openGL_ctx -> vertexShader);
+     loadShaders(&openGL_ctx -> shaderProgram, &openGL_ctx -> fragmentShader, &openGL_ctx -> vertexShader);
+     setShadersAttributes(openGL_ctx);
+     clearScreen();
+    }else if(key == GLFW_KEY_F1){
+     /*moving edge test*/
+     printf("openGL_program_ctx.ArrayOfVertex_s.VertexArray_s[0].array[1]: %f\n", openGL_ctx->ArrayOfVertex_s.VertexArray_s[0].array[1]);
+     openGL_ctx->ArrayOfVertex_s.VertexArray_s[0].array[1] -= 0.1;
+     printf("after array[1]: %f\n", openGL_ctx->ArrayOfVertex_s.VertexArray_s[0].array[1]);
+     glBufferSubData(GL_ARRAY_BUFFER, 0, openGL_ctx->ArrayOfVertex_s.VertexArray_s[0].sizeOfItems, openGL_ctx->ArrayOfVertex_s.VertexArray_s[0].array);
+    }else if(key == GLFW_KEY_F2){
+     /*moving edge test*/
+     printf("openGL_program_ctx.ArrayOfVertex_s.VertexArray_s[0].array[1]: %f\n", openGL_ctx->ArrayOfVertex_s.VertexArray_s[0].array[1]);
+     openGL_ctx->ArrayOfVertex_s.VertexArray_s[0].array[1] += 0.1;
+     printf("after array[1]: %f\n", openGL_ctx->ArrayOfVertex_s.VertexArray_s[0].array[1]);
+     glBufferSubData(GL_ARRAY_BUFFER, 0, openGL_ctx->ArrayOfVertex_s.VertexArray_s[0].sizeOfItems, openGL_ctx->ArrayOfVertex_s.VertexArray_s[0].array);
+    }else if(key == GLFW_KEY_F5){
+     /*moving edge test*/
+     printf("openGL_program_ctx.ArrayOfVertex_s.VertexArray_s[0].array[1]: %f\n", openGL_ctx->ArrayOfVertex_s.VertexArray_s[0].array[1]);
+     openGL_ctx->ArrayOfVertex_s.VertexArray_s[0].array[1] -= 0.1;
+     printf("after array[1]: %f\n", openGL_ctx->ArrayOfVertex_s.VertexArray_s[0].array[0]);
+     glBufferSubData(GL_ARRAY_BUFFER, 0, openGL_ctx->ArrayOfVertex_s.VertexArray_s[0].sizeOfItems, openGL_ctx->ArrayOfVertex_s.VertexArray_s[0].array);
+    }else if(key == GLFW_KEY_F6){
+     /*moving edge test*/
+     printf("openGL_program_ctx.ArrayOfVertex_s.VertexArray_s[0].array[1]: %f\n", openGL_ctx->ArrayOfVertex_s.VertexArray_s[0].array[1]);
+     openGL_ctx->ArrayOfVertex_s.VertexArray_s[0].array[1] += 0.1;
+     printf("after array[1]: %f\n", openGL_ctx->ArrayOfVertex_s.VertexArray_s[0].array[0]);
+     glBufferSubData(GL_ARRAY_BUFFER, 0, openGL_ctx->ArrayOfVertex_s.VertexArray_s[0].sizeOfItems, openGL_ctx->ArrayOfVertex_s.VertexArray_s[0].array);
     }
   }
 }
+
+void clearScreen(void){
+ glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	// Clean the screen and the depth buffer
+ glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+};
 
 void setBootstrapConfig(void) {
   glfwSetErrorCallback(error_callback);
@@ -35,7 +69,7 @@ void setBootstrapConfig(void) {
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
   glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-  glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+  glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
   return;
 };
 
@@ -103,7 +137,6 @@ int main() {
   }
 
   //printf("wtf: %f\n", openGL_program_ctx.ArrayOfVertex_s[0].VertexArray_s.array[2]);
-
 
   loadObject(&openGL_program_ctx);
 

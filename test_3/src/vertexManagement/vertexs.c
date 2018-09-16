@@ -12,31 +12,9 @@
 
 #include "includes/vertexs.h"
 
-GLfloat triangle[] = {
-    0.0f,  0.5f,  // Vertex 1 (X, Y)
-    0.5f,  -0.5f, // Vertex 2 (X, Y)
-    -0.5f, -0.5f  // Vertex 3 (X, Y)
-};
+size_t triangleColoredSize = 20;
 
-GLfloat triangleColored[] = {
-    0.0f,  0.5f,  1.0f, 0.0f, 0.0f, // Vertex 1 (X, Y, Red, Green, Blue): Red
-    0.5f,  -0.5f, 0.0f, 1.0f, 0.0f, // Vertex 1 (X, Y, Red, Green, Blue): Green
-    -0.5f, -0.5f, 0.0f, 0.0f, 1.0f  // Vertex 1 (X, Y, Red, Green, Blue): Blue
-};
-
-size_t triangleColoredSize = 15;
-
-GLfloat cube[] = {
-  1.000000f, -1.000000f, -1.000000f,
-  1.000000f, -1.000000f, 1.000000f,
-  -1.000000f, -1.000000f, 1.000000f,
-  -1.000000f, -1.000000f, -1.000000f,
-  1.000000f, 1.000000f, -1.000000f,
-  1.000000f, 1.000000f, 1.000001f,
-  -1.000000f, 1.000000f, 1.000000f,
-  -1.000000f, 1.000000f, -1.000000f
-};
-float vertices[] = {
+GLfloat vertices[] = {
     -0.5f,  0.5f, 1.0f, 0.0f, 0.0f, // Top-left
      0.5f,  0.5f, 0.0f, 1.0f, 0.0f, // Top-right
      0.5f, -0.5f, 0.0f, 0.0f, 1.0f, // Bottom-right
@@ -59,10 +37,10 @@ void uploadVertexOntoTheGPU(Context_t *ctx) {
 #endif
 
 glBindBuffer(GL_ARRAY_BUFFER, ctx -> vbufferObj);
-glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+glBufferData(GL_ARRAY_BUFFER, ctx->ArrayOfVertex_s.VertexArray_s[0].sizeOfItems, ctx->ArrayOfVertex_s.VertexArray_s[0].array, GL_DYNAMIC_DRAW);
 
 glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ctx -> ebo);
-glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_STATIC_DRAW);
+glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_DYNAMIC_DRAW);
 
 #ifdef debugBuild
   printf("vbufferObj finished\n");
@@ -72,7 +50,7 @@ glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_STATIC_DRAW
 void getVertexs (Context_t *ctx){
   //TODO: future evol get this from a .obj file or more to construct the vertexs
   for (size_t i = 0; i < triangleColoredSize; i++) {
-    VertexArray_t_push(&ctx -> VertexArray_s, triangleColored[i]);
+    VertexArray_t_push(&ctx -> VertexArray_s, vertices[i]);
   }
   return;
 };

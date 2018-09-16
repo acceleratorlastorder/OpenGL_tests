@@ -92,24 +92,6 @@ int main() {
   VertexArray_t_initArray(&openGL_program_ctx.VertexArray_s, 0);
 
   getVertexs(&openGL_program_ctx);
-  /*
-  VertexArray_t_push(&openGL_program_ctx.VertexArray_s, 0.0f);
-  VertexArray_t_push(&openGL_program_ctx.VertexArray_s, 0.5f);
-  VertexArray_t_push(&openGL_program_ctx.VertexArray_s, 1.0f);
-  VertexArray_t_push(&openGL_program_ctx.VertexArray_s, 0.0f);
-  VertexArray_t_push(&openGL_program_ctx.VertexArray_s, 0.0f);
-
-  VertexArray_t_push(&openGL_program_ctx.VertexArray_s, 0.5f);
-  VertexArray_t_push(&openGL_program_ctx.VertexArray_s, -0.5f);
-  VertexArray_t_push(&openGL_program_ctx.VertexArray_s, 0.0f);
-  VertexArray_t_push(&openGL_program_ctx.VertexArray_s, 1.0f);
-  VertexArray_t_push(&openGL_program_ctx.VertexArray_s, 0.0f);
-
-  VertexArray_t_push(&openGL_program_ctx.VertexArray_s, -0.5f);
-  VertexArray_t_push(&openGL_program_ctx.VertexArray_s, -0.5f);
-  VertexArray_t_push(&openGL_program_ctx.VertexArray_s, 0.0f);
-  VertexArray_t_push(&openGL_program_ctx.VertexArray_s, 0.0f);
-  VertexArray_t_push(&openGL_program_ctx.VertexArray_s, 1.0f);*/
 
   ArrayOfVertex_t_initArray(&openGL_program_ctx.ArrayOfVertex_s, 0);
   ArrayOfVertex_t_push(&openGL_program_ctx.ArrayOfVertex_s, &openGL_program_ctx.VertexArray_s);

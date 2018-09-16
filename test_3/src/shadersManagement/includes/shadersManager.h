@@ -2,3 +2,4 @@ void compileVertexShader(char *vertexShaderSource, GLuint *shaderProgram, GLuint
 void compileFragmentShader(char *fragmentShaderSource, GLuint *shaderProgram, GLuint *fragmentShader);
 void loadShaders(GLuint *shaderProgram, GLuint *fragmentShader, GLuint *vertexShader);
 void setShadersAttributes(Context_t *ctx);
+void reloadShaders();

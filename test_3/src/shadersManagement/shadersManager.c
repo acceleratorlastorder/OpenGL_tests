@@ -116,6 +116,10 @@ void setShadersAttributes(Context_t *ctx) {
   glEnableVertexAttribArray(ctx -> textureID);
   glVertexAttribPointer(ctx -> textureID, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), 0);
 
-
   return;
+}
+
+void reloadShaders(){
+
+  
 }

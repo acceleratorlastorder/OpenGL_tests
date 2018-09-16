@@ -16,6 +16,18 @@
 
 screenRes monitorRes = {.width = 800, .height = 600};
 
+static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+  if (action == GLFW_PRESS) {
+    Context_t* obj = (Context_t *)glfwGetWindowUserPointer(window);
+    if (key == GLFW_KEY_ESCAPE){
+      glfwSetWindowShouldClose(window, GLFW_TRUE);
+    }else if (key == GLFW_KEY_F3) {
+      printf("openGL_program_ctx.ArrayOfVertex_s.VertexArray_s[0].array[1]: %f\n", obj->ArrayOfVertex_s.VertexArray_s[0].array[1]);
+      //reloadShaders();
+    }
+  }
+}
 
 void setBootstrapConfig(void) {
   glfwSetErrorCallback(error_callback);
@@ -28,7 +40,7 @@ void setBootstrapConfig(void) {
 };
 
 void loadObject(Context_t *openGL_program_ctx) {
-  getTexture(openGL_program_ctx);
+  //getTexture(openGL_program_ctx);
   glGenBuffers(1, &openGL_program_ctx -> ebo);
   uploadVertexOntoTheGPU(openGL_program_ctx);
   loadShaders(&openGL_program_ctx -> shaderProgram, &openGL_program_ctx -> fragmentShader, &openGL_program_ctx -> vertexShader);
@@ -63,6 +75,8 @@ int main() {
     glfwTerminate();
     return -1;
   }
+  glfwSetKeyCallback(window, key_callback);
+
   /* Make the window's context current */
   glfwMakeContextCurrent(window);
   gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
@@ -72,6 +86,8 @@ int main() {
   printf("msBetweenFrame: %lf\n", msBetweenFrame);
 
   Context_t openGL_program_ctx;
+
+  glfwSetWindowUserPointer(window, &openGL_program_ctx);
 
   VertexArray_t_initArray(&openGL_program_ctx.VertexArray_s, 0);
 
@@ -133,9 +149,6 @@ int main() {
 
     /* Poll for and process events */
     glfwPollEvents();
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
-      glfwSetWindowShouldClose(window, GL_TRUE);
-    }
   }
 
   glDeleteProgram(openGL_program_ctx.shaderProgram);

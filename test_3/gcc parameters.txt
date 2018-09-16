@@ -30,8 +30,6 @@ src/objectManagement/opperation.c
 src/objectManagement/constructor.c
 src/glad.c
 
-
-
 files to include
 
 src/filesManagement/filesManager.c

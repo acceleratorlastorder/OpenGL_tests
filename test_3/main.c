@@ -187,7 +187,6 @@ int main() {
     startLoopTime = time(NULL);
     /*printf("currentTime with glfw: %lf\n", currentTime);*/
     // Clear the screen to black
-    // Clear the screen to black
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 

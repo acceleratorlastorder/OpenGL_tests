@@ -8,8 +8,10 @@ layout(location = 1) in vec2 vertexUV;
 in vec2 position;
 in vec2 texcoord;
 
-// Output data ; will be interpolated for each fragment.
+// Output data; will be interpolated for each fragment.
 out vec2 Texcoord;
+
+uniform mat4 trans;
 
 in vec3 color;
 out vec3 Color;
@@ -17,5 +19,7 @@ out vec3 Color;
 void main(){
     Color = color;
     Texcoord = texcoord;
-    gl_Position = vec4(position, 0.0, 1.0);
+    /*gl_Position = vec4(position, 0.0, 1.0);*/
+    gl_Position = trans * vec4(position, 0.0, 1.0);
+
 }

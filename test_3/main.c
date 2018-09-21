@@ -5,9 +5,11 @@
 #include "includes/glad/glad.h"
 
 #include <GLFW/glfw3.h>
+#include <cglm/call.h>
 
 #include "includes/include.h"
 
+#include "src/objectManagement/includes/opperation.h"
 #include "src/objectManagement/includes/constructor.h"
 #include "src/shadersManagement/includes/shadersManager.h"
 #include "src/vertexManagement/includes/vertexs.h"
@@ -74,7 +76,7 @@ void setBootstrapConfig(void) {
 };
 
 void loadObject(Context_t *openGL_program_ctx) {
-  //getTexture(openGL_program_ctx);
+  getTexture(openGL_program_ctx);
   glGenBuffers(1, &openGL_program_ctx -> ebo);
   uploadVertexOntoTheGPU(openGL_program_ctx);
   loadShaders(&openGL_program_ctx -> shaderProgram, &openGL_program_ctx -> fragmentShader, &openGL_program_ctx -> vertexShader);
@@ -96,7 +98,18 @@ int main() {
   if (!glfwInit()) {
     return -1;
   }
+  mat4 t1, t3;
+  printf("print_mat4(t1):\n");
+  print_mat4(t1);
+  /* test translate is postmultiplied */
+  glm_rotate_make(t1, M_PI_4, GLM_YUP);
+  printf("print_mat4(t1):\n");
+  print_mat4(t1);
+  printf("print_mat4(t3):\n");
+  print_mat4(t3);
 
+  printf("print_mat4(t1):\n");
+  print_mat4(t1);
   setBootstrapConfig();
   GLFWmonitor *monitorIsInFullScreen = NULL;
   if (isFullscreen == 1) {
@@ -123,8 +136,6 @@ int main() {
 
   glfwSetWindowUserPointer(window, &openGL_program_ctx);
 
-  VertexArray_t_initArray(&openGL_program_ctx.VertexArray_s, 0);
-
   getVertexs(&openGL_program_ctx);
 
   ArrayOfVertex_t_initArray(&openGL_program_ctx.ArrayOfVertex_s, 0);
@@ -140,8 +151,38 @@ int main() {
 
   loadObject(&openGL_program_ctx);
 
+  //openGL_program_ctx.position_mat = GLM_MAT4_IDENTITY_INIT;
+
+  //TODO: change it for GLM_MAT4_IDENTITY_INIT
+  openGL_program_ctx.position_mat[0][0] = 1.0f;
+  openGL_program_ctx.position_mat[0][1] = 0.0f;
+  openGL_program_ctx.position_mat[0][2] = 0.0f;
+  openGL_program_ctx.position_mat[0][3] = 0.0f;
+
+  openGL_program_ctx.position_mat[1][0] = 0.0f;
+  openGL_program_ctx.position_mat[1][1] = 1.0f;
+  openGL_program_ctx.position_mat[1][2] = 0.0f;
+  openGL_program_ctx.position_mat[1][3] = 0.0f;
+
+  openGL_program_ctx.position_mat[2][0] = 0.0f;
+  openGL_program_ctx.position_mat[2][1] = 0.0f;
+  openGL_program_ctx.position_mat[2][2] = 1.0f;
+  openGL_program_ctx.position_mat[2][3] = 0.0f;
+
+  openGL_program_ctx.position_mat[3][0] = 0.0f;
+  openGL_program_ctx.position_mat[3][1] = 0.0f;
+  openGL_program_ctx.position_mat[3][2] = 0.0f;
+  openGL_program_ctx.position_mat[3][3] = 1.0f;
+
+
+  printf("position_mat: GLM_MAT4_IDENTITY_INIT\n");
+  glm_mat4_print(openGL_program_ctx.position_mat, stderr);
+
+
+  float i = 0.0f;
   /* Loop until the user closes the window */
   while (!glfwWindowShouldClose(window)) {
+    i += 5.0f;
     /* Render here */
     startLoopTime = time(NULL);
     /*printf("currentTime with glfw: %lf\n", currentTime);*/
@@ -149,6 +190,10 @@ int main() {
     // Clear the screen to black
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     // glClear(GL_COLOR_BUFFER_BIT);
+
+    glm_rotate(openGL_program_ctx.position_mat, glm_rad(20.0f), (vec3){0.0f, 0.0f, 1.0f});
+
+    glUniformMatrix4fv(openGL_program_ctx.uniTrans, 1, GL_FALSE, (float *)openGL_program_ctx.position_mat);
 
     // Draw a triangle from the 3 vertices
     //glDrawArrays(GL_TRIANGLES, 0, 3);
@@ -165,11 +210,13 @@ int main() {
     /* Poll for and process events */
     glfwPollEvents();
   }
+  glDeleteTextures(1, &openGL_program_ctx.textureID);
 
   glDeleteProgram(openGL_program_ctx.shaderProgram);
   glDeleteShader(openGL_program_ctx.fragmentShader);
   glDeleteShader(openGL_program_ctx.vertexShader);
 
+  glDeleteBuffers(1, &openGL_program_ctx.ebo);
   glDeleteBuffers(1, &openGL_program_ctx.vbufferObj);
 
   glDeleteVertexArrays(1, &openGL_program_ctx.vao);

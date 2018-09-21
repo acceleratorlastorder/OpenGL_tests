@@ -5,6 +5,7 @@
 #include "../../includes/glad/glad.h"
 
 #include <GLFW/glfw3.h>
+#include <cglm/call.h>
 
 #include "../../includes/include.h"
 
@@ -116,10 +117,13 @@ void setShadersAttributes(Context_t *ctx) {
   glEnableVertexAttribArray(ctx -> textureID);
   glVertexAttribPointer(ctx -> textureID, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), 0);
 
+  // SET MATRIX POINTER
+  ctx -> uniTrans = glGetUniformLocation(ctx -> shaderProgram, "trans");
+  
   return;
 }
 
 void reloadShaders(){
 
-  
+
 }

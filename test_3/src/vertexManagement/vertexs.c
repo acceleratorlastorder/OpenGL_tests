@@ -49,6 +49,7 @@ glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_DYNAMIC_DRA
 
 void getVertexs (Context_t *ctx){
   //TODO: future evol get this from a .obj file or more to construct the vertexs
+  VertexArray_t_initArray(&ctx -> VertexArray_s, 0);
   for (size_t i = 0; i < triangleColoredSize; i++) {
     VertexArray_t_push(&ctx -> VertexArray_s, vertices[i]);
   }

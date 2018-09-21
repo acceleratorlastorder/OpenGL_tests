@@ -1,3 +1,4 @@
+#include <cglm/call.h>
 typedef int GLint;
 typedef unsigned int GLuint;
 typedef float GLfloat;
@@ -37,6 +38,8 @@ struct Context_t {
   GLuint vertexShader;
   GLint posAttrib;
   GLint colAttrib;
+  mat4 position_mat;
+  GLint uniTrans;
   VertexArray_t VertexArray_s;
   ArrayOfVertex_t ArrayOfVertex_s;
 };

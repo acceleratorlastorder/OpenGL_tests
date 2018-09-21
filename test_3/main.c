@@ -190,7 +190,6 @@ int main() {
     // Clear the screen to black
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
-    // glClear(GL_COLOR_BUFFER_BIT);
 
     glm_rotate(openGL_program_ctx.position_mat, glm_rad(20.0f), (vec3){0.0f, 0.0f, 1.0f});
 

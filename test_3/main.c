@@ -188,7 +188,11 @@ int main() {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
+<<<<<<< HEAD
     glm_rotate(openGL_program_ctx.position_mat, rad, (vec3){0.0f, 0.0f, 1.0f});
+=======
+    //glm_rotate(openGL_program_ctx.position_mat, rad, (vec3){0.0f, 0.0f, 1.0f});
+>>>>>>> 5a38dcc3ef9c529d18f8bf3891cf2a30a6c97738
 
     glUniformMatrix4fv(openGL_program_ctx.uniTrans, 1, GL_FALSE, (float *)openGL_program_ctx.position_mat);
 

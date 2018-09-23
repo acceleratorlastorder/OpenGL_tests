@@ -61,7 +61,8 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 }
 
 void clearScreen(void){
- glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	// Clean the screen and the depth buffer
+ // Clean the screen and the depth buffer
+ glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
  glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 };
 
@@ -90,7 +91,6 @@ double frand_a_b(double a, double b) {
 
 int main() {
   //TODO: ADD A LOAD CONF HERE cause it's annoying to recompile just for a conf param lol
-  //TODO: ADD A RELOAD SHADERS function bind to a key or any appropriate action
 
   GLFWwindow *window;
 
@@ -177,12 +177,10 @@ int main() {
 
   printf("position_mat: GLM_MAT4_IDENTITY_INIT\n");
   glm_mat4_print(openGL_program_ctx.position_mat, stderr);
-
-
-  float i = 0.0f;
+  float rad = glm_rad(10.0f);
   /* Loop until the user closes the window */
   while (!glfwWindowShouldClose(window)) {
-    i += 5.0f;
+
     /* Render here */
     startLoopTime = time(NULL);
     /*printf("currentTime with glfw: %lf\n", currentTime);*/
@@ -190,7 +188,7 @@ int main() {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    glm_rotate(openGL_program_ctx.position_mat, glm_rad(20.0f), (vec3){0.0f, 0.0f, 1.0f});
+    glm_rotate(openGL_program_ctx.position_mat, rad, (vec3){0.0f, 0.0f, 1.0f});
 
     glUniformMatrix4fv(openGL_program_ctx.uniTrans, 1, GL_FALSE, (float *)openGL_program_ctx.position_mat);
 

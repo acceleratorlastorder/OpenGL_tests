@@ -16,6 +16,12 @@
 #include "src/texturesManagement/includes/texturesManagement.h"
 
 
+#include <sys/time.h>
+
+
+
+
+
 screenRes monitorRes = {.width = 800, .height = 600};
 
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -89,6 +95,23 @@ double frand_a_b(double a, double b) {
   return (rand() / (double)RAND_MAX) * (b - a) + a;
 };
 
+static int inline SpinALot(int spinCount)
+{
+    __m128 x = _mm_setzero_ps();
+    for(int i=0; i<spinCount; i++) {
+        x = _mm_add_ps(x,_mm_set1_ps(1.0f));
+    }
+    return _mm_cvt_ss2si(x);
+}
+
+long getMicrotime(){
+	struct timeval currentTime;
+	gettimeofday(&currentTime, NULL);
+	return currentTime.tv_sec /** (int)1e6 + currentTime.tv_usec*/;
+}
+
+
+
 int main() {
   //TODO: ADD A LOAD CONF HERE cause it's annoying to recompile just for a conf param lol
 
@@ -147,13 +170,12 @@ int main() {
     printf("openGL_program_ctx.ArrayOfVertex_s.VertexArray_s[0].array[%I64d]: %f\n", i, openGL_program_ctx.ArrayOfVertex_s.VertexArray_s[0].array[i]);
   }
 
-  //printf("wtf: %f\n", openGL_program_ctx.ArrayOfVertex_s[0].VertexArray_s.array[2]);
-
   loadObject(&openGL_program_ctx);
 
-  //openGL_program_ctx.position_mat = GLM_MAT4_IDENTITY_INIT;
-
   //TODO: change it for GLM_MAT4_IDENTITY_INIT
+  mat4 ptr = &openGL_program_ctx.position_mat;
+  init_mat4_with_GLM_MAT4_IDENTITY_INIT(*ptr);
+  /*
   openGL_program_ctx.position_mat[0][0] = 1.0f;
   openGL_program_ctx.position_mat[0][1] = 0.0f;
   openGL_program_ctx.position_mat[0][2] = 0.0f;
@@ -173,7 +195,11 @@ int main() {
   openGL_program_ctx.position_mat[3][1] = 0.0f;
   openGL_program_ctx.position_mat[3][2] = 0.0f;
   openGL_program_ctx.position_mat[3][3] = 1.0f;
+*/
+ printf("position_mat %f\n", openGL_program_ctx.position_mat[1][1]);
 
+  //clear console
+  //system("cls");
 
   printf("position_mat: GLM_MAT4_IDENTITY_INIT\n");
   glm_mat4_print(openGL_program_ctx.position_mat, stderr);
@@ -201,8 +227,11 @@ int main() {
     glfwSwapBuffers(window);
 
     endLoopTime = time(NULL);
-
-    Sleep(80 - difftime(endLoopTime, startLoopTime));
+    /*
+    printf("startLoopTime: %I64d\n", startLoopTime);
+    printf("endLoopTime: %I64d\n", endLoopTime);
+    */
+    Sleep((1000/24) - difftime(endLoopTime, startLoopTime));
 
     /* Poll for and process events */
     glfwPollEvents();

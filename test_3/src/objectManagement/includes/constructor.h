@@ -52,3 +52,4 @@ void VertexArray_t_freeIt(struct VertexArray_t *self);
 void ArrayOfVertex_t_push(struct ArrayOfVertex_t *self, struct VertexArray_t *verArr_s);
 void ArrayOfVertex_t_freeIt(struct ArrayOfVertex_t *self);
 void ArrayOfVertex_t_initArray(struct ArrayOfVertex_t *self, size_t size);
+void init_mat4_with_GLM_MAT4_IDENTITY_INIT(mat4 **matrice);

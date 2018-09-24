@@ -119,11 +119,14 @@ void setShadersAttributes(Context_t *ctx) {
 
   // SET MATRIX POINTER
   ctx -> uniTrans = glGetUniformLocation(ctx -> shaderProgram, "trans");
-  
+
   return;
 }
 
-void reloadShaders(){
-
-
+void reloadShaders(Context_t *ctx){
+  glDeleteProgram(ctx -> shaderProgram);
+  glDeleteShader(ctx -> fragmentShader);
+  glDeleteShader(ctx -> vertexShader);
+  loadShaders(&ctx -> shaderProgram, &ctx -> fragmentShader, &ctx -> vertexShader);
+  setShadersAttributes(ctx);
 }

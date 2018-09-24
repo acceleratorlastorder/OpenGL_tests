@@ -15,13 +15,6 @@
 #include "src/vertexManagement/includes/vertexs.h"
 #include "src/texturesManagement/includes/texturesManagement.h"
 
-
-#include <sys/time.h>
-
-
-
-
-
 screenRes monitorRes = {.width = 800, .height = 600};
 
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -31,13 +24,8 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
     if (key == GLFW_KEY_ESCAPE){
       glfwSetWindowShouldClose(window, GLFW_TRUE);
     }else if (key == GLFW_KEY_F3) {
-
-     glDeleteProgram(openGL_ctx -> shaderProgram);
-     glDeleteShader(openGL_ctx -> fragmentShader);
-     glDeleteShader(openGL_ctx -> vertexShader);
-     loadShaders(&openGL_ctx -> shaderProgram, &openGL_ctx -> fragmentShader, &openGL_ctx -> vertexShader);
-     setShadersAttributes(openGL_ctx);
-     clearScreen();
+     reloadShaders(openGL_ctx);
+     //clearScreen();
     }else if(key == GLFW_KEY_F1){
      /*moving edge test*/
      printf("openGL_program_ctx.ArrayOfVertex_s.VertexArray_s[0].array[1]: %f\n", openGL_ctx->ArrayOfVertex_s.VertexArray_s[0].array[1]);
@@ -66,12 +54,6 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
   }
 }
 
-void clearScreen(void){
- // Clean the screen and the depth buffer
- glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
- glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-};
-
 void setBootstrapConfig(void) {
   glfwSetErrorCallback(error_callback);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -94,7 +76,8 @@ void loadObject(Context_t *openGL_program_ctx) {
 double frand_a_b(double a, double b) {
   return (rand() / (double)RAND_MAX) * (b - a) + a;
 };
-
+/*
+  clock counter helper
 static int inline SpinALot(int spinCount)
 {
     __m128 x = _mm_setzero_ps();
@@ -103,14 +86,7 @@ static int inline SpinALot(int spinCount)
     }
     return _mm_cvt_ss2si(x);
 }
-
-long getMicrotime(){
-	struct timeval currentTime;
-	gettimeofday(&currentTime, NULL);
-	return currentTime.tv_sec /** (int)1e6 + currentTime.tv_usec*/;
-}
-
-
+*/
 
 int main() {
   //TODO: ADD A LOAD CONF HERE cause it's annoying to recompile just for a conf param lol
@@ -182,7 +158,8 @@ int main() {
 
   printf("position_mat: GLM_MAT4_IDENTITY_INIT\n");
   glm_mat4_print(openGL_program_ctx.position_mat, stderr);
-  float rad = glm_rad(10.0f);
+  float rad = glm_rad(36.0f);
+  vec3 normalvec3 = {0.0f, 0.0f, 1.0f};
   /* Loop until the user closes the window */
   while (!glfwWindowShouldClose(window)) {
 
@@ -193,12 +170,8 @@ int main() {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    glm_rotate(openGL_program_ctx.position_mat, rad, (vec3){0.0f, 0.0f, 1.0f});
-
+    glm_rotate(openGL_program_ctx.position_mat, rad, normalvec3);
     glUniformMatrix4fv(openGL_program_ctx.uniTrans, 1, GL_FALSE, (float *)openGL_program_ctx.position_mat);
-
-    // Draw a triangle from the 3 vertices
-    //glDrawArrays(GL_TRIANGLES, 0, 3);
 
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
@@ -210,7 +183,7 @@ int main() {
     printf("startLoopTime: %I64d\n", startLoopTime);
     printf("endLoopTime: %I64d\n", endLoopTime);
     */
-    Sleep((1000/24) - difftime(endLoopTime, startLoopTime));
+    Sleep((1000/60) - difftime(endLoopTime, startLoopTime));
 
     /* Poll for and process events */
     glfwPollEvents();

@@ -173,30 +173,9 @@ int main() {
   loadObject(&openGL_program_ctx);
 
   //TODO: change it for GLM_MAT4_IDENTITY_INIT
-  mat4 ptr = &openGL_program_ctx.position_mat;
-  init_mat4_with_GLM_MAT4_IDENTITY_INIT(*ptr);
-  /*
-  openGL_program_ctx.position_mat[0][0] = 1.0f;
-  openGL_program_ctx.position_mat[0][1] = 0.0f;
-  openGL_program_ctx.position_mat[0][2] = 0.0f;
-  openGL_program_ctx.position_mat[0][3] = 0.0f;
+  init_mat4_with_GLM_MAT4_IDENTITY_INIT(openGL_program_ctx.position_mat);
 
-  openGL_program_ctx.position_mat[1][0] = 0.0f;
-  openGL_program_ctx.position_mat[1][1] = 1.0f;
-  openGL_program_ctx.position_mat[1][2] = 0.0f;
-  openGL_program_ctx.position_mat[1][3] = 0.0f;
-
-  openGL_program_ctx.position_mat[2][0] = 0.0f;
-  openGL_program_ctx.position_mat[2][1] = 0.0f;
-  openGL_program_ctx.position_mat[2][2] = 1.0f;
-  openGL_program_ctx.position_mat[2][3] = 0.0f;
-
-  openGL_program_ctx.position_mat[3][0] = 0.0f;
-  openGL_program_ctx.position_mat[3][1] = 0.0f;
-  openGL_program_ctx.position_mat[3][2] = 0.0f;
-  openGL_program_ctx.position_mat[3][3] = 1.0f;
-*/
- printf("position_mat %f\n", openGL_program_ctx.position_mat[1][1]);
+  printf("position_mat %f\n", openGL_program_ctx.position_mat[1][1]);
 
   //clear console
   //system("cls");

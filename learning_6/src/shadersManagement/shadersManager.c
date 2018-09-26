@@ -107,18 +107,18 @@ void setShadersAttributes(Context_t *ctx) {
 
   ctx -> posAttrib = glGetAttribLocation(ctx -> shaderProgram, "position");
   glEnableVertexAttribArray(ctx -> posAttrib);
-  glVertexAttribPointer(ctx -> posAttrib, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), 0);
+  glVertexAttribPointer(ctx -> posAttrib, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), 0);
 
   ctx -> colAttrib = glGetAttribLocation(ctx -> shaderProgram, "color");
   glEnableVertexAttribArray(ctx -> colAttrib);
-  glVertexAttribPointer(ctx -> colAttrib, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void *)(2 * sizeof(GLfloat)));
+  glVertexAttribPointer(ctx -> colAttrib, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (void *)(3 * sizeof(GLfloat)));
 
   ctx -> textureID = glGetAttribLocation(ctx -> shaderProgram, "texcoord");
   glEnableVertexAttribArray(ctx -> textureID);
-  glVertexAttribPointer(ctx -> textureID, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), 0);
+  glVertexAttribPointer(ctx -> textureID, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (void *)(6 * sizeof(GLfloat)));
 
   // SET MATRIX POINTER
-  ctx -> uniTrans = glGetUniformLocation(ctx -> shaderProgram, "trans");
+  ctx -> uniTrans = glGetUniformLocation(ctx -> shaderProgram, "model");
 
   return;
 }

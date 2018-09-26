@@ -5,13 +5,15 @@
 layout(location = 0) in vec3 vertexPosition_modelspace;
 layout(location = 1) in vec2 vertexUV;
 */
-in vec2 position;
+in vec3 position;
 in vec2 texcoord;
 
 // Output data; will be interpolated for each fragment.
 out vec2 Texcoord;
 
-uniform mat4 trans;
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 proj;
 
 in vec3 color;
 out vec3 Color;
@@ -19,7 +21,5 @@ out vec3 Color;
 void main(){
     Color = color;
     Texcoord = texcoord;
-    /*gl_Position = vec4(position, 0.0, 1.0);*/
-    gl_Position = trans * vec4(position, 0.0, 1.0);
-
+    gl_Position = proj * view * model * vec4(position, 1.0);
 }

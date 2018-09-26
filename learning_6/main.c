@@ -15,7 +15,7 @@
 #include "src/vertexManagement/includes/vertexs.h"
 #include "src/texturesManagement/includes/texturesManagement.h"
 
-screenRes monitorRes = {.width = 800, .height = 600};
+screenRes monitorRes = {.width = 1200, .height = 800};
 
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
@@ -64,9 +64,13 @@ void setBootstrapConfig(void) {
   return;
 };
 
+void setObjectRenderingConfig(void){
+  glEnable(GL_DEPTH_TEST);
+}
+
 void loadObject(Context_t *openGL_program_ctx) {
   getTexture(openGL_program_ctx);
-  glGenBuffers(1, &openGL_program_ctx -> ebo);
+
   uploadVertexOntoTheGPU(openGL_program_ctx);
   loadShaders(&openGL_program_ctx -> shaderProgram, &openGL_program_ctx -> fragmentShader, &openGL_program_ctx -> vertexShader);
   setShadersAttributes(openGL_program_ctx);
@@ -97,18 +101,7 @@ int main() {
   if (!glfwInit()) {
     return -1;
   }
-  mat4 t1, t3;
-  printf("print_mat4(t1):\n");
-  print_mat4(t1);
-  /* test translate is postmultiplied */
-  glm_rotate_make(t1, M_PI_4, GLM_YUP);
-  printf("print_mat4(t1):\n");
-  print_mat4(t1);
-  printf("print_mat4(t3):\n");
-  print_mat4(t3);
 
-  printf("print_mat4(t1):\n");
-  print_mat4(t1);
   setBootstrapConfig();
   GLFWmonitor *monitorIsInFullScreen = NULL;
   if (isFullscreen == 1) {
@@ -126,6 +119,7 @@ int main() {
   /* Make the window's context current */
   glfwMakeContextCurrent(window);
   gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+  setObjectRenderingConfig();
 
   time_t startLoopTime, endLoopTime;
   double msBetweenFrame = getMsBetweenFrame();
@@ -133,47 +127,64 @@ int main() {
 
   Context_t openGL_program_ctx;
 
+  //Set a reference to the structure so we can use it wherever we are as long we can have window
   glfwSetWindowUserPointer(window, &openGL_program_ctx);
+
 
   getVertexs(&openGL_program_ctx);
 
   ArrayOfVertex_t_initArray(&openGL_program_ctx.ArrayOfVertex_s, 0);
+  //Add vertex array into the context structure
   ArrayOfVertex_t_push(&openGL_program_ctx.ArrayOfVertex_s, &openGL_program_ctx.VertexArray_s);
-
+  //Free the temp array
   VertexArray_t_freeIt(&openGL_program_ctx.VertexArray_s);
-
-  for (size_t i = 0; i < openGL_program_ctx.ArrayOfVertex_s.VertexArray_s[0].usedSize; i++) {
-    printf("openGL_program_ctx.ArrayOfVertex_s.VertexArray_s[0].array[%I64d]: %f\n", i, openGL_program_ctx.ArrayOfVertex_s.VertexArray_s[0].array[i]);
-  }
 
   loadObject(&openGL_program_ctx);
 
   //TODO: change it for GLM_MAT4_IDENTITY_INIT
   init_mat4_with_GLM_MAT4_IDENTITY_INIT(openGL_program_ctx.position_mat);
 
-  printf("position_mat %f\n", openGL_program_ctx.position_mat[1][1]);
-
   //clear console
   //system("cls");
-
-  printf("position_mat: GLM_MAT4_IDENTITY_INIT\n");
-  glm_mat4_print(openGL_program_ctx.position_mat, stderr);
-  float rad = glm_rad(20.0f);
+  float rad = glm_rad(5.0f);
   vec3 normalvec3 = {0.0f, 0.0f, 1.0f};
+
+
+  mat4 view;
+  glm_mat4_print(view, stderr);
+  vec3 eye = {1.2f, 1.2f, 1.2f};
+  vec3 center = {0.0f, 0.0f, 0.0f};
+  vec3 up = {0.0f, 0.0f, 1.0f};
+  glm_lookat(eye, center, up, view);
+  glm_mat4_print(view, stderr);
+
+  GLint uniView = glGetUniformLocation(openGL_program_ctx.shaderProgram, "view");
+  glUniformMatrix4fv(uniView, 1, GL_FALSE, (float *)view);
+
+
+  mat4 proj;
+  glm_perspective(glm_rad(45.0f), 800.0f / 600.0f, 1.0f, 10.0f, proj);
+
+  GLint uniProj = glGetUniformLocation(openGL_program_ctx.shaderProgram, "proj");
+  glUniformMatrix4fv(uniProj, 1, GL_FALSE, (float *)proj);
+
   /* Loop until the user closes the window */
   while (!glfwWindowShouldClose(window)) {
 
     /* Render here */
     startLoopTime = time(NULL);
     /*printf("currentTime with glfw: %lf\n", currentTime);*/
+
     // Clear the screen to black
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glm_rotate(openGL_program_ctx.position_mat, rad, normalvec3);
     glUniformMatrix4fv(openGL_program_ctx.uniTrans, 1, GL_FALSE, (float *)openGL_program_ctx.position_mat);
 
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    // Draw a rectangle from the 2 triangles using 6 indices
+    //glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+    glDrawArrays(GL_TRIANGLES, 0, 36);
 
     /* Swap front and back buffers */
     glfwSwapBuffers(window);
@@ -183,7 +194,7 @@ int main() {
     printf("startLoopTime: %I64d\n", startLoopTime);
     printf("endLoopTime: %I64d\n", endLoopTime);
     */
-    Sleep((1000/60) - difftime(endLoopTime, startLoopTime));
+    Sleep((1000/24) - difftime(endLoopTime, startLoopTime));
 
     /* Poll for and process events */
     glfwPollEvents();
@@ -194,7 +205,7 @@ int main() {
   glDeleteShader(openGL_program_ctx.fragmentShader);
   glDeleteShader(openGL_program_ctx.vertexShader);
 
-  glDeleteBuffers(1, &openGL_program_ctx.ebo);
+  //glDeleteBuffers(1, &openGL_program_ctx.ebo);
   glDeleteBuffers(1, &openGL_program_ctx.vbufferObj);
 
   glDeleteVertexArrays(1, &openGL_program_ctx.vao);

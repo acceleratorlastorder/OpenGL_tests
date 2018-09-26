@@ -135,6 +135,7 @@ void loadObject(void) {
   glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 0, 0);
   glEnableVertexAttribArray(posAttrib);
 
+
 }
 
 int main() {
@@ -180,6 +181,7 @@ int main() {
   while (!glfwWindowShouldClose(window)) {
     /* Render here */
 
+    glEnable(GL_DEPTH_TEST);
 
     glClear(GL_COLOR_BUFFER_BIT);
 

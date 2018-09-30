@@ -15,8 +15,8 @@
 #include "src/vertexManagement/includes/vertexs.h"
 #include "src/texturesManagement/includes/texturesManagement.h"
 
-screenRes monitorRes = {.width = 1200, .height = 800};
-
+screenRes monitorRes = {.width = 800, .height = 600};
+GLint uniColor = 0;
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
   if (action == GLFW_PRESS) {
@@ -61,6 +61,8 @@ void setBootstrapConfig(void) {
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
   glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
   glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
+  glfwWindowHint(GLFW_DEPTH_BITS, 24);
+  glfwWindowHint(GLFW_STENCIL_BITS, 8);
   return;
 };
 
@@ -69,11 +71,12 @@ void setObjectRenderingConfig(void){
 }
 
 void loadObject(Context_t *openGL_program_ctx) {
-  getTexture(openGL_program_ctx);
 
   uploadVertexOntoTheGPU(openGL_program_ctx);
   loadShaders(&openGL_program_ctx -> shaderProgram, &openGL_program_ctx -> fragmentShader, &openGL_program_ctx -> vertexShader);
   setShadersAttributes(openGL_program_ctx);
+
+  getTexture(openGL_program_ctx);
   return;
 };
 
@@ -91,8 +94,41 @@ static int inline SpinALot(int spinCount)
     return _mm_cvt_ss2si(x);
 }
 */
+void drawPlaneSurface(Context_t *ctx){
+  //start it
+  glEnable(GL_STENCIL_TEST);
 
-int main() {
+    // Draw floor
+    glStencilFunc(GL_ALWAYS, 1, 0xFF);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+    glStencilMask(0xFF);
+    glDepthMask(GL_FALSE);
+    glClear(GL_STENCIL_BUFFER_BIT);
+
+    glDrawArrays(GL_TRIANGLES, 36, 6);
+
+    // Draw cube reflection
+    glStencilFunc(GL_EQUAL, 1, 0xFF);
+    glStencilMask(0x00);
+    glDepthMask(GL_TRUE);
+
+    vec3 translateVec = {0.0f, 0.0f, -1.0f};
+    vec3 scaleVec = {1.0f, 1.0f, -1.0f};
+    glm_translate(ctx -> position_model_mat, translateVec);
+    glm_scale(ctx -> position_model_mat, scaleVec);
+    glUniformMatrix4fv(ctx -> uniModel, 1, GL_FALSE, (float *)ctx -> position_model_mat);
+
+
+    glUniform3f(uniColor, 0.3f, 0.3f, 0.3f);
+      glDrawArrays(GL_TRIANGLES, 0, 36);
+    glUniform3f(uniColor, 1.0f, 1.0f, 1.0f);
+
+    //end it
+    glDisable(GL_STENCIL_TEST);
+}
+
+
+int main(void) {
   //TODO: ADD A LOAD CONF HERE cause it's annoying to recompile just for a conf param lol
 
   GLFWwindow *window;
@@ -118,10 +154,21 @@ int main() {
 
   /* Make the window's context current */
   glfwMakeContextCurrent(window);
-  gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+  if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+    printf("can't load glad\n");
+
+    glfwTerminate();
+    return -1;
+  }
+
+  /*
+  // Define the viewport dimensions
+  glViewport(0, 0, 800, 600);
+  */
+
   setObjectRenderingConfig();
 
-  time_t startLoopTime, endLoopTime;
+  //time_t startLoopTime, endLoopTime;
   double msBetweenFrame = getMsBetweenFrame();
   printf("msBetweenFrame: %lf\n", msBetweenFrame);
 
@@ -141,19 +188,18 @@ int main() {
 
   loadObject(&openGL_program_ctx);
 
-  //TODO: change it for GLM_MAT4_IDENTITY_INIT
-  init_mat4_with_GLM_MAT4_IDENTITY_INIT(openGL_program_ctx.position_mat);
+  init_mat4_with_GLM_MAT4_IDENTITY_INIT(openGL_program_ctx.position_model_mat);
 
   //clear console
   //system("cls");
 
-  float rad = glm_rad(5.0f);
+  float rad = glm_rad(0.1f);
   vec3 normalvec3 = {0.0f, 0.0f, 1.0f};
 
 
   mat4 view;
   glm_mat4_print(view, stderr);
-  vec3 eye = {1.2f, 1.2f, 1.2f};
+  vec3 eye = {2.5f, 2.5f, 2.0f};
   vec3 center = {0.0f, 0.0f, 0.0f};
   vec3 up = {0.0f, 0.0f, 1.0f};
   glm_lookat(eye, center, up, view);
@@ -162,43 +208,55 @@ int main() {
   GLint uniView = glGetUniformLocation(openGL_program_ctx.shaderProgram, "view");
   glUniformMatrix4fv(uniView, 1, GL_FALSE, (float *)view);
 
-
   mat4 proj;
-  glm_perspective(glm_rad(45.0f), 800.0f / 600.0f, 1.0f, 10.0f, proj);
+  glm_perspective(glm_rad(45.0f), (float)monitorRes.width / (float)monitorRes.height, 1.0f, 10.0f, proj);
 
   GLint uniProj = glGetUniformLocation(openGL_program_ctx.shaderProgram, "proj");
   glUniformMatrix4fv(uniProj, 1, GL_FALSE, (float *)proj);
 
+  uniColor = glGetUniformLocation(openGL_program_ctx.shaderProgram, "overrideColor");
+  int err;
+  while ((err = glGetError()) != GL_NO_ERROR) {
+    printf("OpenGL error: %d \n", err);
+  }
   /* Loop until the user closes the window */
   while (!glfwWindowShouldClose(window)) {
+    /* Poll for and process events */
+    glfwPollEvents();
 
     /* Render here */
-    startLoopTime = time(NULL);
+    //startLoopTime = time(NULL);
     /*printf("currentTime with glfw: %lf\n", currentTime);*/
 
-    // Clear the screen to black
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    // Clear the screen to white
+    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glm_rotate(openGL_program_ctx.position_mat, rad, normalvec3);
-    glUniformMatrix4fv(openGL_program_ctx.uniTrans, 1, GL_FALSE, (float *)openGL_program_ctx.position_mat);
+    glm_rotate(openGL_program_ctx.position_model_mat, rad, normalvec3);
+    glUniformMatrix4fv(openGL_program_ctx.uniModel, 1, GL_FALSE, (float *)openGL_program_ctx.position_model_mat);
 
     // Draw a rectangle from the 2 triangles using 6 indices
     //glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
     glDrawArrays(GL_TRIANGLES, 0, 36);
+
+
+    drawPlaneSurface(&openGL_program_ctx);
+
+    while ((err = glGetError()) != GL_NO_ERROR) {
+      printf("OpenGL error: %d \n", err);
+    }
 
     /* Swap front and back buffers */
     glfwSwapBuffers(window);
 
-    endLoopTime = time(NULL);
+    //endLoopTime = time(NULL);
     /*
     printf("startLoopTime: %I64d\n", startLoopTime);
     printf("endLoopTime: %I64d\n", endLoopTime);
     */
-    Sleep((1000/24) - difftime(endLoopTime, startLoopTime));
+    //Sleep((1000/60) - difftime(endLoopTime, startLoopTime));
 
-    /* Poll for and process events */
-    glfwPollEvents();
   }
   glDeleteTextures(1, &openGL_program_ctx.textureID);
 
@@ -212,5 +270,6 @@ int main() {
   glDeleteVertexArrays(1, &openGL_program_ctx.vao);
 
   glfwTerminate();
+
   return 0;
 };

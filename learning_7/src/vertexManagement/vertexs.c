@@ -180,17 +180,18 @@ void getVertexs (Context_t *ctx){
     VertexArray_t_push(&ctx -> VertexArray_s, vertices[i]);
   }
   */
-  
+  /*
   for (size_t i = 0; i < cubeSize; i++) {
     VertexArray_t_push(&ctx -> VertexArray_s, cubeVertices[i]);
   }
   for (size_t i = 0; i < cubePlaneSize; i++) {
     VertexArray_t_push(&ctx -> VertexArray_s, cubePlane[i]);
   }
+  */
 
- /*
+
   for (size_t i = 0; i < fullSize; i++) {
     VertexArray_t_push(&ctx -> VertexArray_s, vertices[i]);
-  }*/
+  }
   return;
 };

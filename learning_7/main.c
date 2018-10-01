@@ -95,33 +95,32 @@ static int inline SpinALot(int spinCount)
 }
 */
 void drawPlaneSurface(Context_t *ctx){
-  //start it
-  glEnable(GL_STENCIL_TEST);
+    //start it
+    glEnable(GL_STENCIL_TEST);
+        // Draw floor
+        glStencilFunc(GL_ALWAYS, 1, 0xFF); // Set any stencil to 1
+        glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+        glStencilMask(0xFF); // Write to stencil buffer
+        glDepthMask(GL_FALSE); // Don't write to depth buffer
+        glClear(GL_STENCIL_BUFFER_BIT); // Clear stencil buffer (0 by default)
 
-    // Draw floor
-    glStencilFunc(GL_ALWAYS, 1, 0xFF);
-    glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
-    glStencilMask(0xFF);
-    glDepthMask(GL_FALSE);
-    glClear(GL_STENCIL_BUFFER_BIT);
+        glDrawArrays(GL_TRIANGLES, 36, 6);
 
-    glDrawArrays(GL_TRIANGLES, 36, 6);
+        // Draw cube reflection
+        glStencilFunc(GL_EQUAL, 1, 0xFF); // Pass test if stencil value is 1
+        glStencilMask(0x00); // Don't write anything to stencil buffer
+        glDepthMask(GL_TRUE); // Write to depth buffer
 
-    // Draw cube reflection
-    glStencilFunc(GL_EQUAL, 1, 0xFF);
-    glStencilMask(0x00);
-    glDepthMask(GL_TRUE);
-
-    vec3 translateVec = {0.0f, 0.0f, -1.0f};
-    vec3 scaleVec = {1.0f, 1.0f, -1.0f};
-    glm_translate(ctx -> position_model_mat, translateVec);
-    glm_scale(ctx -> position_model_mat, scaleVec);
-    glUniformMatrix4fv(ctx -> uniModel, 1, GL_FALSE, (float *)ctx -> position_model_mat);
+        vec3 translateVec = {0, 0, -1};
+        vec3 scaleVec = {1, 1, -1};
+        glm_translate(ctx -> position_model_mat, translateVec);
+        glm_scale(ctx -> position_model_mat, scaleVec);
+        glUniformMatrix4fv(ctx -> uniModel, 1, GL_FALSE, (float *)ctx -> position_model_mat);
 
 
-    glUniform3f(uniColor, 0.3f, 0.3f, 0.3f);
-      glDrawArrays(GL_TRIANGLES, 0, 36);
-    glUniform3f(uniColor, 1.0f, 1.0f, 1.0f);
+        glUniform3f(uniColor, 0.3f, 0.3f, 0.3f);
+          glDrawArrays(GL_TRIANGLES, 0, 36);
+        glUniform3f(uniColor, 1.0f, 1.0f, 1.0f);
 
     //end it
     glDisable(GL_STENCIL_TEST);
@@ -221,8 +220,6 @@ int main(void) {
   }
   /* Loop until the user closes the window */
   while (!glfwWindowShouldClose(window)) {
-    /* Poll for and process events */
-    glfwPollEvents();
 
     /* Render here */
     //startLoopTime = time(NULL);
@@ -241,7 +238,7 @@ int main(void) {
     glDrawArrays(GL_TRIANGLES, 0, 36);
 
 
-    drawPlaneSurface(&openGL_program_ctx);
+    //drawPlaneSurface(&openGL_program_ctx);
 
     while ((err = glGetError()) != GL_NO_ERROR) {
       printf("OpenGL error: %d \n", err);
@@ -249,6 +246,9 @@ int main(void) {
 
     /* Swap front and back buffers */
     glfwSwapBuffers(window);
+
+    /* Poll for and process events */
+    glfwPollEvents();
 
     //endLoopTime = time(NULL);
     /*

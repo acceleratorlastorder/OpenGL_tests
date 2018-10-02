@@ -76,7 +76,7 @@ void loadObject(Context_t *openGL_program_ctx) {
   loadShaders(&openGL_program_ctx -> shaderProgram, &openGL_program_ctx -> fragmentShader, &openGL_program_ctx -> vertexShader);
   setShadersAttributes(openGL_program_ctx);
 
-  getTexture(openGL_program_ctx);
+  //getTexture(openGL_program_ctx);
   return;
 };
 
@@ -95,6 +95,7 @@ static int inline SpinALot(int spinCount)
 }
 */
 void drawPlaneSurface(Context_t *ctx){
+
     //start it
     glEnable(GL_STENCIL_TEST);
         // Draw floor
@@ -102,7 +103,7 @@ void drawPlaneSurface(Context_t *ctx){
         glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
         glStencilMask(0xFF); // Write to stencil buffer
         glDepthMask(GL_FALSE); // Don't write to depth buffer
-        glClear(GL_STENCIL_BUFFER_BIT); // Clear stencil buffer (0 by default)
+        //glClear(GL_STENCIL_BUFFER_BIT); // Clear stencil buffer (0 by default)
 
         glDrawArrays(GL_TRIANGLES, 36, 6);
 
@@ -126,9 +127,12 @@ void drawPlaneSurface(Context_t *ctx){
     glDisable(GL_STENCIL_TEST);
 }
 
+typedef unsigned long DWORD;
 
 int main(void) {
   //TODO: ADD A LOAD CONF HERE cause it's annoying to recompile just for a conf param lol
+
+  DWORD NvOptimusEnablement = 0x00000001;
 
   GLFWwindow *window;
 
@@ -229,6 +233,7 @@ int main(void) {
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+
     glm_rotate(openGL_program_ctx.position_model_mat, rad, normalvec3);
     glUniformMatrix4fv(openGL_program_ctx.uniModel, 1, GL_FALSE, (float *)openGL_program_ctx.position_model_mat);
 
@@ -238,7 +243,7 @@ int main(void) {
     glDrawArrays(GL_TRIANGLES, 0, 36);
 
 
-    //drawPlaneSurface(&openGL_program_ctx);
+    drawPlaneSurface(&openGL_program_ctx);
 
     while ((err = glGetError()) != GL_NO_ERROR) {
       printf("OpenGL error: %d \n", err);

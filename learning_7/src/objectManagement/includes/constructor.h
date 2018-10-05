@@ -38,6 +38,9 @@ struct Context_t {
   GLuint vertexShader;
   GLint posAttrib;
   GLint colAttrib;
+  GLint uniColor;
+  GLint uniProj;
+  GLint uniView;
   mat4 position_model_mat;
   GLint uniModel;
   VertexArray_t VertexArray_s;

@@ -7,10 +7,10 @@ layout(location = 1) in vec2 vertexUV;
 */
 in vec3 position;
 in vec3 color;
-//in vec2 texcoord;
+in vec2 texcoord;
 
 // Output data; will be interpolated for each fragment.
-//out vec2 Texcoord;
+out vec2 Texcoord;
 out vec3 Color;
 
 uniform mat4 model;
@@ -20,7 +20,7 @@ uniform mat4 proj;
 uniform vec3 overrideColor;
 
 void main(){
-    Color = /*overrideColor * */color;
-    //Texcoord = texcoord;
+    Color = overrideColor * color;
+    Texcoord = texcoord;
     gl_Position = proj * view * model * vec4(position, 1.0);
 }

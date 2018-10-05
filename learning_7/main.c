@@ -15,8 +15,10 @@
 #include "src/vertexManagement/includes/vertexs.h"
 #include "src/texturesManagement/includes/texturesManagement.h"
 
+  #include <sys/time.h>
+
 screenRes monitorRes = {.width = 800, .height = 600};
-GLint uniColor = 0;
+
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
   if (action == GLFW_PRESS) {
@@ -56,8 +58,8 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 
 void setBootstrapConfig(void) {
   glfwSetErrorCallback(error_callback);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
   glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
   glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
@@ -76,7 +78,7 @@ void loadObject(Context_t *openGL_program_ctx) {
   loadShaders(&openGL_program_ctx -> shaderProgram, &openGL_program_ctx -> fragmentShader, &openGL_program_ctx -> vertexShader);
   setShadersAttributes(openGL_program_ctx);
 
-  //getTexture(openGL_program_ctx);
+  getTexture(openGL_program_ctx);
   return;
 };
 
@@ -95,7 +97,7 @@ static int inline SpinALot(int spinCount)
 }
 */
 void drawPlaneSurface(Context_t *ctx){
-
+//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     //start it
     glEnable(GL_STENCIL_TEST);
         // Draw floor
@@ -103,7 +105,7 @@ void drawPlaneSurface(Context_t *ctx){
         glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
         glStencilMask(0xFF); // Write to stencil buffer
         glDepthMask(GL_FALSE); // Don't write to depth buffer
-        //glClear(GL_STENCIL_BUFFER_BIT); // Clear stencil buffer (0 by default)
+        glClear(GL_STENCIL_BUFFER_BIT); // Clear stencil buffer (0 by default)
 
         glDrawArrays(GL_TRIANGLES, 36, 6);
 
@@ -118,21 +120,20 @@ void drawPlaneSurface(Context_t *ctx){
         glm_scale(ctx -> position_model_mat, scaleVec);
         glUniformMatrix4fv(ctx -> uniModel, 1, GL_FALSE, (float *)ctx -> position_model_mat);
 
-
-        glUniform3f(uniColor, 0.3f, 0.3f, 0.3f);
+        glUniform3f(ctx -> uniColor, 0.3f, 0.3f, 0.3f);
           glDrawArrays(GL_TRIANGLES, 0, 36);
-        glUniform3f(uniColor, 1.0f, 1.0f, 1.0f);
+        glUniform3f(ctx -> uniColor, 1.0f, 1.0f, 1.0f);
 
     //end it
     glDisable(GL_STENCIL_TEST);
+
+    glm_translate(ctx -> position_model_mat, translateVec);
+    glm_scale(ctx -> position_model_mat, scaleVec);
 }
 
-typedef unsigned long DWORD;
 
 int main(void) {
   //TODO: ADD A LOAD CONF HERE cause it's annoying to recompile just for a conf param lol
-
-  DWORD NvOptimusEnablement = 0x00000001;
 
   GLFWwindow *window;
 
@@ -171,7 +172,8 @@ int main(void) {
 
   setObjectRenderingConfig();
 
-  //time_t startLoopTime, endLoopTime;
+
+  time_t startLoopTime, endLoopTime;
   double msBetweenFrame = getMsBetweenFrame();
   printf("msBetweenFrame: %lf\n", msBetweenFrame);
 
@@ -192,41 +194,43 @@ int main(void) {
   loadObject(&openGL_program_ctx);
 
   init_mat4_with_GLM_MAT4_IDENTITY_INIT(openGL_program_ctx.position_model_mat);
+  print_mat4(openGL_program_ctx.position_model_mat, 0);
 
   //clear console
   //system("cls");
 
-  float rad = glm_rad(0.1f);
-  vec3 normalvec3 = {0.0f, 0.0f, 1.0f};
-
 
   mat4 view;
-  glm_mat4_print(view, stderr);
   vec3 eye = {2.5f, 2.5f, 2.0f};
   vec3 center = {0.0f, 0.0f, 0.0f};
   vec3 up = {0.0f, 0.0f, 1.0f};
   glm_lookat(eye, center, up, view);
-  glm_mat4_print(view, stderr);
 
-  GLint uniView = glGetUniformLocation(openGL_program_ctx.shaderProgram, "view");
-  glUniformMatrix4fv(uniView, 1, GL_FALSE, (float *)view);
+
+  glUniformMatrix4fv(openGL_program_ctx.uniView, 1, GL_FALSE, (float *)view);
 
   mat4 proj;
-  glm_perspective(glm_rad(45.0f), (float)monitorRes.width / (float)monitorRes.height, 1.0f, 10.0f, proj);
+  glmc_perspective(glm_rad(45.0f), (float)monitorRes.width / (float)monitorRes.height, 1.0f, 10.0f, proj);
 
-  GLint uniProj = glGetUniformLocation(openGL_program_ctx.shaderProgram, "proj");
-  glUniformMatrix4fv(uniProj, 1, GL_FALSE, (float *)proj);
 
-  uniColor = glGetUniformLocation(openGL_program_ctx.shaderProgram, "overrideColor");
+  glUniformMatrix4fv(openGL_program_ctx.uniProj, 1, GL_FALSE, (float *)proj);
+
+
+
+  float rad = glm_rad(5.0f);
+  vec3 normalvec3 = {0.0f, 0.0f, 1.0f};
+
+
   int err;
   while ((err = glGetError()) != GL_NO_ERROR) {
-    printf("OpenGL error: %d \n", err);
+    printf("init process got OpenGL error: %d \n", err);
   }
+
+
   /* Loop until the user closes the window */
   while (!glfwWindowShouldClose(window)) {
-
     /* Render here */
-    //startLoopTime = time(NULL);
+    startLoopTime = time(NULL);
     /*printf("currentTime with glfw: %lf\n", currentTime);*/
 
     // Clear the screen to white
@@ -234,33 +238,36 @@ int main(void) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
-    glm_rotate(openGL_program_ctx.position_model_mat, rad, normalvec3);
+    glmc_rotate(openGL_program_ctx.position_model_mat, rad, normalvec3);
     glUniformMatrix4fv(openGL_program_ctx.uniModel, 1, GL_FALSE, (float *)openGL_program_ctx.position_model_mat);
+
 
     // Draw a rectangle from the 2 triangles using 6 indices
     //glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
     glDrawArrays(GL_TRIANGLES, 0, 36);
 
-
     drawPlaneSurface(&openGL_program_ctx);
 
     while ((err = glGetError()) != GL_NO_ERROR) {
-      printf("OpenGL error: %d \n", err);
+      printf("main loop got OpenGL error: %d \n", err);
     }
 
     /* Swap front and back buffers */
     glfwSwapBuffers(window);
 
+    //getchar();
+
     /* Poll for and process events */
     glfwPollEvents();
 
-    //endLoopTime = time(NULL);
+
+    endLoopTime = time(NULL);
     /*
     printf("startLoopTime: %I64d\n", startLoopTime);
     printf("endLoopTime: %I64d\n", endLoopTime);
     */
-    //Sleep((1000/60) - difftime(endLoopTime, startLoopTime));
+    Sleep((1000/60) - difftime(endLoopTime, startLoopTime));
 
   }
   glDeleteTextures(1, &openGL_program_ctx.textureID);

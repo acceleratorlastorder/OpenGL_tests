@@ -112,13 +112,20 @@ void setShadersAttributes(Context_t *ctx) {
   ctx -> colAttrib = glGetAttribLocation(ctx -> shaderProgram, "color");
   glEnableVertexAttribArray(ctx -> colAttrib);
   glVertexAttribPointer(ctx -> colAttrib, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (void *)(3 * sizeof(GLfloat)));
-  /*
+
   ctx -> textureID = glGetAttribLocation(ctx -> shaderProgram, "texcoord");
   glEnableVertexAttribArray(ctx -> textureID);
   glVertexAttribPointer(ctx -> textureID, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (void *)(6 * sizeof(GLfloat)));
-  */
+
   // SET THE MATRIX POINTER
   ctx -> uniModel = glGetUniformLocation(ctx -> shaderProgram, "model");
+
+  ctx -> uniView = glGetUniformLocation(ctx -> shaderProgram, "view");
+
+  ctx -> uniProj = glGetUniformLocation(ctx -> shaderProgram, "proj");
+
+  ctx -> uniColor = glGetUniformLocation(ctx -> shaderProgram, "overrideColor");
+
 
   return;
 }

@@ -206,6 +206,8 @@ int main(void) {
   vec3 up = {0.0f, 0.0f, 1.0f};
   glm_lookat(eye, center, up, view);
 
+  print_mat4(view, 0);
+  print_mat4_pretty_format(view);
 
   glUniformMatrix4fv(openGL_program_ctx.uniView, 1, GL_FALSE, (float *)view);
 
@@ -219,7 +221,6 @@ int main(void) {
 
   float rad = glm_rad(5.0f);
   vec3 normalvec3 = {0.0f, 0.0f, 1.0f};
-
 
   int err;
   while ((err = glGetError()) != GL_NO_ERROR) {
@@ -240,7 +241,6 @@ int main(void) {
 
     glmc_rotate(openGL_program_ctx.position_model_mat, rad, normalvec3);
     glUniformMatrix4fv(openGL_program_ctx.uniModel, 1, GL_FALSE, (float *)openGL_program_ctx.position_model_mat);
-
 
     // Draw a rectangle from the 2 triangles using 6 indices
     //glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);

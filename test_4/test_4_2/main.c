@@ -35,31 +35,7 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
     }else if (key == GLFW_KEY_F3) {
      reloadShaders(openGL_ctx);
      //clearScreen();
-    }else if(key == GLFW_KEY_F1){
-     /*moving edge test*/
-     printf("openGL_program_ctx.ArrayOfVertex_s.VertexArray_s[0].array[1]: %f\n", openGL_ctx->ArrayOfVertex_s.VertexArray_s[0].array[1]);
-     openGL_ctx->ArrayOfVertex_s.VertexArray_s[0].array[1] -= 0.1;
-     printf("after array[1]: %f\n", openGL_ctx->ArrayOfVertex_s.VertexArray_s[0].array[1]);
-     glBufferSubData(GL_ARRAY_BUFFER, 0, openGL_ctx->ArrayOfVertex_s.VertexArray_s[0].sizeOfItems, openGL_ctx->ArrayOfVertex_s.VertexArray_s[0].array);
-    }else if(key == GLFW_KEY_F2){
-     /*moving edge test*/
-     printf("openGL_program_ctx.ArrayOfVertex_s.VertexArray_s[0].array[1]: %f\n", openGL_ctx->ArrayOfVertex_s.VertexArray_s[0].array[1]);
-     openGL_ctx->ArrayOfVertex_s.VertexArray_s[0].array[1] += 0.1;
-     printf("after array[1]: %f\n", openGL_ctx->ArrayOfVertex_s.VertexArray_s[0].array[1]);
-     glBufferSubData(GL_ARRAY_BUFFER, 0, openGL_ctx->ArrayOfVertex_s.VertexArray_s[0].sizeOfItems, openGL_ctx->ArrayOfVertex_s.VertexArray_s[0].array);
-    }else if(key == GLFW_KEY_F5){
-     /*moving edge test*/
-     printf("openGL_program_ctx.ArrayOfVertex_s.VertexArray_s[0].array[1]: %f\n", openGL_ctx->ArrayOfVertex_s.VertexArray_s[0].array[1]);
-     openGL_ctx->ArrayOfVertex_s.VertexArray_s[0].array[1] -= 0.1;
-     printf("after array[1]: %f\n", openGL_ctx->ArrayOfVertex_s.VertexArray_s[0].array[0]);
-     glBufferSubData(GL_ARRAY_BUFFER, 0, openGL_ctx->ArrayOfVertex_s.VertexArray_s[0].sizeOfItems, openGL_ctx->ArrayOfVertex_s.VertexArray_s[0].array);
-    }else if(key == GLFW_KEY_F6){
-     /*moving edge test*/
-     printf("openGL_program_ctx.ArrayOfVertex_s.VertexArray_s[0].array[1]: %f\n", openGL_ctx->ArrayOfVertex_s.VertexArray_s[0].array[1]);
-     openGL_ctx->ArrayOfVertex_s.VertexArray_s[0].array[1] += 0.1;
-     printf("after array[1]: %f\n", openGL_ctx->ArrayOfVertex_s.VertexArray_s[0].array[0]);
-     glBufferSubData(GL_ARRAY_BUFFER, 0, openGL_ctx->ArrayOfVertex_s.VertexArray_s[0].sizeOfItems, openGL_ctx->ArrayOfVertex_s.VertexArray_s[0].array);
-   }else if(key == GLFW_KEY_RIGHT || key == GLFW_KEY_LEFT || key == GLFW_KEY_UP || key == GLFW_KEY_DOWN){
+    }if(key == GLFW_KEY_RIGHT || key == GLFW_KEY_LEFT || key == GLFW_KEY_UP || key == GLFW_KEY_DOWN){
       if(key == GLFW_KEY_RIGHT){
         openGL_ctx -> eye[0] += 1.0f;
       }else if(key == GLFW_KEY_LEFT){
@@ -73,10 +49,7 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
       vec3 up = {0.0f, 0.0f, 1.0f};
       glm_lookat(openGL_ctx -> eye, center, up, openGL_ctx -> view);
       glUniformMatrix4fv(openGL_ctx -> uniView, 1, GL_FALSE, (float *)openGL_ctx -> view);
-
-  }
-
-
+    }
   }
 }
 

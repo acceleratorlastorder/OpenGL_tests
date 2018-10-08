@@ -253,7 +253,9 @@ int main(void) {
     //glm_scale(openGL_program_ctx.position_model_mat, scaleVec);
     glUniformMatrix4fv(openGL_program_ctx.uniModel, 1, GL_FALSE, (float *)openGL_program_ctx.position_model_mat);
 
+
     glDrawArrays(GL_TRIANGLES, 0, 36);
+
 
     //vec3 translateVec = {0, 1, -1};
     //vec3 scaleVec = {1, 1, -1};

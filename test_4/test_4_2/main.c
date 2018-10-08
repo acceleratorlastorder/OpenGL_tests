@@ -19,6 +19,13 @@
 
 screenRes monitorRes = {.width = 800, .height = 600};
 
+void moveCamera(Context_t *openGL_program_ctx){
+  openGL_program_ctx -> eye[0] = 8.0f;
+  openGL_program_ctx -> eye[1] = 8.0f;
+  openGL_program_ctx -> eye[2] = 2.0f;
+}
+
+
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
   if (action == GLFW_PRESS) {
@@ -52,7 +59,24 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
      openGL_ctx->ArrayOfVertex_s.VertexArray_s[0].array[1] += 0.1;
      printf("after array[1]: %f\n", openGL_ctx->ArrayOfVertex_s.VertexArray_s[0].array[0]);
      glBufferSubData(GL_ARRAY_BUFFER, 0, openGL_ctx->ArrayOfVertex_s.VertexArray_s[0].sizeOfItems, openGL_ctx->ArrayOfVertex_s.VertexArray_s[0].array);
-    }
+   }else if(key == GLFW_KEY_RIGHT || key == GLFW_KEY_LEFT || key == GLFW_KEY_UP || key == GLFW_KEY_DOWN){
+      if(key == GLFW_KEY_RIGHT){
+        openGL_ctx -> eye[0] += 1.0f;
+      }else if(key == GLFW_KEY_LEFT){
+        openGL_ctx -> eye[0] -= 1.0f;
+      }else if(key == GLFW_KEY_UP){
+        openGL_ctx -> eye[1] -= 1.0f;
+      }else if(key == GLFW_KEY_DOWN){
+        openGL_ctx -> eye[1] += 1.0f;
+      }
+      vec3 center = {0.0f, 0.0f, 0.0f};
+      vec3 up = {0.0f, 0.0f, 1.0f};
+      glm_lookat(openGL_ctx -> eye, center, up, openGL_ctx -> view);
+      glUniformMatrix4fv(openGL_ctx -> uniView, 1, GL_FALSE, (float *)openGL_ctx -> view);
+
+  }
+
+
   }
 }
 
@@ -200,14 +224,19 @@ int main(void) {
   //system("cls");
 
 
-  mat4 view;
-  vec3 eye = {8.0f, 8.0f, 2.0f};
+  openGL_program_ctx.eye[0] = 8.0f;
+  openGL_program_ctx.eye[1] = 8.0f;
+  openGL_program_ctx.eye[2] = 2.0f;
+
+
+
+
   vec3 center = {0.0f, 0.0f, 0.0f};
   vec3 up = {0.0f, 0.0f, 1.0f};
-  glm_lookat(eye, center, up, view);
+  glm_lookat(openGL_program_ctx.eye, center, up, openGL_program_ctx.view);
 
 
-  glUniformMatrix4fv(openGL_program_ctx.uniView, 1, GL_FALSE, (float *)view);
+  glUniformMatrix4fv(openGL_program_ctx.uniView, 1, GL_FALSE, (float *)openGL_program_ctx.view);
 
   mat4 proj;
   glmc_perspective(glm_rad(45.0f), (float)monitorRes.width / (float)monitorRes.height, 1.0f, 50.0f, proj);

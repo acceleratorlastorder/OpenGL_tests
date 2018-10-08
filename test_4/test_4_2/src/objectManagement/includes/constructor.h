@@ -41,6 +41,8 @@ struct Context_t {
   GLint uniColor;
   GLint uniProj;
   GLint uniView;
+  mat4 view;
+  vec3 eye;
   mat4 position_model_mat;
   GLint uniModel;
   VertexArray_t VertexArray_s;

@@ -176,8 +176,6 @@ int main(void) {
 
   Context_t openGL_program_ctx;
 
-
-
   //Set a reference to the structure so we can use it wherever we are as long we can have window
   glfwSetWindowUserPointer(window, &openGL_program_ctx);
 
@@ -192,8 +190,6 @@ int main(void) {
 
   loadObject(&openGL_program_ctx);
 
-  glGenFramebuffers(1, &openGL_program_ctx.frameBuffer);
-  
   init_mat4_with_GLM_MAT4_IDENTITY_INIT(openGL_program_ctx.position_model_mat);
   print_mat4(openGL_program_ctx.position_model_mat, 0);
 

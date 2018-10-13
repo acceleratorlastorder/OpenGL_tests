@@ -44,17 +44,13 @@ function contextProgram(canvasId) {
    * @return {[type]}       [description]
    */
   this.loadVertexShader = function(fileContent) {
-    this.rendering_ctx.vertexShader.value = this.GL.createShader(this.GL.VERTEX_SHADER);
-    this.GL.shaderSource(this.rendering_ctx.vertexShader.value, fileContent);
-    this.GL.compileShader(this.rendering_ctx.vertexShader.value);
 
-    let status = this.GL.getShaderParameter(this.rendering_ctx.vertexShader.value, this.GL.COMPILE_STATUS);
+    this.rendering_ctx.vertexShader.value = this.createShader(this.GL, fileContent, this.GL.VERTEX_SHADER);
+    if (!this.rendering_ctx.vertexShader.value) {
+      console.error("loadVertexShader() error");
+      return;
+    }
 
-    console.log("loadVertexShader() COMPILE_STATUS: ", status);
-
-
-    let log = this.GL.getShaderInfoLog(this.rendering_ctx.vertexShader.value);
-    console.log("loadVertexShader() log : ", log);
     this.GL.attachShader(this.rendering_ctx.shaderProgram, this.rendering_ctx.vertexShader.value);
 
     this.rendering_ctx.vertexShader.isInited = true;
@@ -68,7 +64,8 @@ function contextProgram(canvasId) {
 
     if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
       var info = gl.getShaderInfoLog(shader);
-      throw 'Could not compile WebGL program. \n\n' + info;
+      console.error("Could not compile WebGL program. \n\n", info);
+      return null;
     }
     return shader;
   }
@@ -79,17 +76,13 @@ function contextProgram(canvasId) {
    * @return {[type]}       [description]
    */
   this.loadFragmentShader = function(fileContent) {
-    this.rendering_ctx.fragmentShader.value = this.GL.createShader(this.GL.FRAGMENT_SHADER);
-    this.GL.shaderSource(this.rendering_ctx.fragmentShader.value, fileContent);
-    this.GL.compileShader(this.rendering_ctx.fragmentShader.value);
 
-    let status = this.GL.getShaderParameter(this.rendering_ctx.fragmentShader.value, this.GL.COMPILE_STATUS);
+    this.rendering_ctx.fragmentShader.value = this.createShader(this.GL, fileContent, this.GL.FRAGMENT_SHADER);
+    if (!this.rendering_ctx.fragmentShader.value) {
+      console.error("loadFragmentShader() error");
+      return;
+    }
 
-    console.log("loadFragmentShader() COMPILE_STATUS: ", status);
-
-
-    let log = this.GL.getShaderInfoLog(this.rendering_ctx.fragmentShader.value);
-    console.log("loadFragmentShader() log : ", log);
     this.GL.attachShader(this.rendering_ctx.shaderProgram, this.rendering_ctx.fragmentShader.value);
 
     this.rendering_ctx.fragmentShader.isInited = true;
@@ -210,7 +203,7 @@ function contextProgram(canvasId) {
 /**
  * [readFile description]
  * @param  {[String]} path          [description]
- * @return {[String]}                 [return the response as string]
+ * @return {[String]}               [return the response as string]
  */
 async function readFile(path) {
   return await new Promise(resolve => {
@@ -226,8 +219,7 @@ async function readFile(path) {
     function updateProgress(oEvent) {
       if (oEvent.lengthComputable) {
         var percentComplete = oEvent.loaded / oEvent.total * 100;
-        console.log("percentComplete: ", percentComplete);
-        // ...
+        console.log("loading percentCompleted: ", percentComplete);
       } else {
         // Unable to compute progress information since the total size is unknown
         console.log("can't get computable length");

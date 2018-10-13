@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <windows.h>
+#include <sys/time.h>
 
 #include "includes/glad/glad.h"
 
@@ -15,9 +16,10 @@
 #include "src/vertexManagement/includes/vertexs.h"
 #include "src/texturesManagement/includes/texturesManagement.h"
 
-  #include <sys/time.h>
 
-screenRes monitorRes = {.width = 800, .height = 600};
+/*Default param*/
+int screenWidth = 800;
+int screenHeight = 600;
 
 void moveCamera(Context_t *openGL_program_ctx){
   openGL_program_ctx -> eye[0] = 8.0f;
@@ -25,9 +27,7 @@ void moveCamera(Context_t *openGL_program_ctx){
   openGL_program_ctx -> eye[2] = 2.0f;
 }
 
-
-static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
+static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods){
   printf("yooo key: %d, scancode: %d, action: %d, mods: %d\n", key, scancode, action, mods);
   if (action == GLFW_PRESS || action == GLFW_REPEAT) {
     if (action == GLFW_PRESS) {
@@ -37,23 +37,36 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
         Context_t* openGL_ctx = (Context_t *)glfwGetWindowUserPointer(window);
         reloadShaders(openGL_ctx);
         //clearScreen();
+      }else if (key == GLFW_KEY_F5) {
+        Context_t* openGL_ctx = (Context_t *)glfwGetWindowUserPointer(window);
+        static int framebufferswitchStatus = 0;
+        if (framebufferswitchStatus == 0) {
+          framebufferswitchStatus = 1;
+          glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        }else if(framebufferswitchStatus == 1){
+          framebufferswitchStatus = 0;
+          glBindFramebuffer(GL_FRAMEBUFFER, openGL_ctx -> frameBuffer);
+        }
       }
     }
     if(key == GLFW_KEY_RIGHT || key == GLFW_KEY_LEFT || key == GLFW_KEY_UP || key == GLFW_KEY_DOWN){
       Context_t* openGL_ctx = (Context_t *)glfwGetWindowUserPointer(window);
       if(key == GLFW_KEY_RIGHT){
-        openGL_ctx -> eye[0] -= 1.0f;
-      }else if(key == GLFW_KEY_LEFT){
-        openGL_ctx -> eye[0] += 1.0f;
-      }else if(key == GLFW_KEY_UP){
-        openGL_ctx -> eye[1] -= 1.0f;
-      }else if(key == GLFW_KEY_DOWN){
-        openGL_ctx -> eye[1] += 1.0f;
+        openGL_ctx -> cameraParam.eye[0] -= 1.0f;
       }
-      vec3 center = {0.0f, 0.0f, 0.0f};
-      vec3 up = {0.0f, 0.0f, 1.0f};
-      glm_lookat(openGL_ctx -> eye, center, up, openGL_ctx -> view);
-      glUniformMatrix4fv(openGL_ctx -> uniView, 1, GL_FALSE, (float *)openGL_ctx -> view);
+      if(key == GLFW_KEY_LEFT){
+        openGL_ctx -> cameraParam.eye[0] += 1.0f;
+      }
+      if(key == GLFW_KEY_UP){
+        openGL_ctx -> cameraParam.eye[1] -= 1.0f;
+      }
+      if(key == GLFW_KEY_DOWN){
+        openGL_ctx -> cameraParam.eye[1] += 1.0f;
+      }
+
+      glm_lookat(openGL_ctx -> cameraParam.eye, openGL_ctx -> cameraParam.center,
+            openGL_ctx -> cameraParam.up, openGL_ctx -> cameraParam.view);
+      glUniformMatrix4fv(openGL_ctx -> uniView, 1, GL_FALSE, (float *)openGL_ctx -> cameraParam.view);
     }
   }
 }
@@ -99,7 +112,6 @@ static int inline SpinALot(int spinCount)
 }
 */
 void drawPlaneSurface(Context_t *ctx){
-//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     //start it
     glEnable(GL_STENCIL_TEST);
         // Draw floor
@@ -141,11 +153,20 @@ void checkFrameBufferStatus(){
   }
 };
 
+
+
+
+
 int main(void) {
   //TODO: ADD A LOAD CONF HERE cause it's annoying to recompile just for a conf param lol
 
   int err;
   GLFWwindow *window;
+
+  Context_t openGL_program_ctx;
+
+  openGL_program_ctx.monitorRes.width = screenWidth;
+  openGL_program_ctx.monitorRes.height = screenHeight;
 
   /* Initialize the library */
   if (!glfwInit()) {
@@ -158,7 +179,7 @@ int main(void) {
     monitorIsInFullScreen = glfwGetPrimaryMonitor();
   }
 
-  window = glfwCreateWindow(monitorRes.width, monitorRes.height, "OpenGL_test", monitorIsInFullScreen, NULL);
+  window = glfwCreateWindow(openGL_program_ctx.monitorRes.width, openGL_program_ctx.monitorRes.height, "OpenGL_test", monitorIsInFullScreen, NULL);
   printf("loadObject\n");
   if (!window) {
     glfwTerminate();
@@ -186,7 +207,6 @@ int main(void) {
   double msBetweenFrame = getMsBetweenFrame();
   printf("msBetweenFrame: %lf\n", msBetweenFrame);
 
-  Context_t openGL_program_ctx;
 
   //Set a reference to the structure so we can use it wherever we are as long we can have window
   glfwSetWindowUserPointer(window, &openGL_program_ctx);
@@ -202,6 +222,35 @@ int main(void) {
 
   loadObject(&openGL_program_ctx);
 
+
+  glGenFramebuffers(1, &openGL_program_ctx.frameBuffer);
+
+  glBindFramebuffer(GL_FRAMEBUFFER, openGL_program_ctx.frameBuffer);
+
+
+  checkFrameBufferStatus();
+  /*FRAMEBUFER START*/
+
+  GLuint texColorBuffer;
+  glGenTextures(1, &texColorBuffer);
+  glBindTexture(GL_TEXTURE_2D, texColorBuffer);
+
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, openGL_program_ctx.monitorRes.width, openGL_program_ctx.monitorRes.height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texColorBuffer, 0);
+
+  GLuint rboDepthStencil;
+  glGenRenderbuffers(1, &rboDepthStencil);
+  glBindRenderbuffer(GL_RENDERBUFFER, rboDepthStencil);
+  glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, openGL_program_ctx.monitorRes.width, openGL_program_ctx.monitorRes.height);
+  glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rboDepthStencil);
+
+  /*FRAME BUFER END*/
+
+
   while ((err = glGetError()) != GL_NO_ERROR) {
     printf("error when loading the object OpenGL error: %d \n", err);
   }
@@ -213,37 +262,38 @@ int main(void) {
   //system("cls");
 
 
-  openGL_program_ctx.eye[0] = 8.0f;
-  openGL_program_ctx.eye[1] = 8.0f;
-  openGL_program_ctx.eye[2] = 2.0f;
+  openGL_program_ctx.cameraParam.eye[0] = 8.0f;
+  openGL_program_ctx.cameraParam.eye[1] = 8.0f;
+  openGL_program_ctx.cameraParam.eye[2] = 2.0f;
 
+  openGL_program_ctx.cameraParam.center[0] = 0.0f;
+  openGL_program_ctx.cameraParam.center[1] = 0.0f;
+  openGL_program_ctx.cameraParam.center[2] = 0.0f;
 
+  openGL_program_ctx.cameraParam.up[0] = 0.0f;
+  openGL_program_ctx.cameraParam.up[1] = 0.0f;
+  openGL_program_ctx.cameraParam.up[2] = 1.0f;
 
-  vec3 center = {0.0f, 0.0f, 0.0f};
-  vec3 up = {0.0f, 0.0f, 1.0f};
-  glm_lookat(openGL_program_ctx.eye, center, up, openGL_program_ctx.view);
+  glm_lookat(openGL_program_ctx.eye, openGL_program_ctx.cameraParam.center,
+      openGL_program_ctx.cameraParam.up, openGL_program_ctx.cameraParam.view);
+  glUniformMatrix4fv(openGL_program_ctx.uniView, 1, GL_FALSE, (float *)openGL_program_ctx.cameraParam.view);
 
-
-  glUniformMatrix4fv(openGL_program_ctx.uniView, 1, GL_FALSE, (float *)openGL_program_ctx.view);
 
   mat4 proj;
-  glmc_perspective(glm_rad(45.0f), (float)monitorRes.width / (float)monitorRes.height, 1.0f, 50.0f, proj);
-
-
+  glmc_perspective(glm_rad(45.0f), (float)openGL_program_ctx.monitorRes.width / (float)openGL_program_ctx.monitorRes.height, 1.0f, 50.0f, proj);
   glUniformMatrix4fv(openGL_program_ctx.uniProj, 1, GL_FALSE, (float *)proj);
 
-  checkFrameBufferStatus();
 
-
-
+  /*
   float rad = glm_rad(5.0f);
   vec3 normalvec3 = {0.0f, 0.0f, 1.0f};
-
+  */
 
   while ((err = glGetError()) != GL_NO_ERROR) {
     printf("init process got OpenGL error: %d \n", err);
   }
 
+  glUseProgram(openGL_program_ctx.shaderProgram);
 
   /* Loop until the user closes the window */
   while (!glfwWindowShouldClose(window)) {
@@ -565,6 +615,8 @@ int main(void) {
   glDeleteProgram(openGL_program_ctx.shaderProgram);
   glDeleteShader(openGL_program_ctx.fragmentShader);
   glDeleteShader(openGL_program_ctx.vertexShader);
+
+  glDeleteFramebuffers(1, &openGL_program_ctx.frameBuffer);
 
   //glDeleteBuffers(1, &openGL_program_ctx.ebo);
   glDeleteBuffers(1, &openGL_program_ctx.vbufferObj);

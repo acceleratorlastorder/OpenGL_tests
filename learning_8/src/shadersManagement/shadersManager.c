@@ -98,8 +98,8 @@ void loadShaders(GLuint *shaderProgram, GLuint *fragmentShader,
   removeStringFromMemory(fileContent);
 
   glLinkProgram(*shaderProgram);
-  glUseProgram(*shaderProgram);
 
+    glUseProgram(*shaderProgram);
   return;
 }
 
@@ -131,7 +131,37 @@ void setShadersAttributes(Context_t *ctx) {
   return;
 }
 
-void reloadShaders(Context_t *ctx){
+/*
+void setScreenShadersAttributes(Context_t *ctx) {
+
+    GLint posAttrib = glGetAttribLocation(shaderProgram, "position");
+    glEnableVertexAttribArray(posAttrib);
+    glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
+
+    GLint texAttrib = glGetAttribLocation(shaderProgram, "texcoord");
+    glEnableVertexAttribArray(texAttrib);
+    glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (void*)(2 * sizeof(GLfloat)));
+}
+*/
+
+void setVertexAttribFrom_VertexAttribParameter_t(VertexAttribParameter_t *VA_Param, GLuint shaderProgram){
+  VA_Param -> attributeLocation = glGetAttribLocation(shaderProgram, VA_Param -> name);
+  glEnableVertexAttribArray(VA_Param -> attributeLocation);
+  glVertexAttribPointer(VA_Param -> attributeLocation, VA_Param -> size,
+    VA_Param -> type, VA_Param -> normalized, VA_Param -> stride, (GLvoid*)(VA_Param -> pointer));
+}
+
+/*
+void loadVertexAttribs(ArrayOf_VertexAttribParameter_t VA_Param_array){
+  //TODO: make an array of VertexAttribParameter_t to then send with a for loop each VertexAttribParameter_t
+  for (size_t i = 0; i < VA_Param_array->usedSize; i++) {
+    setVertexAttribFrom_VertexAttribParameter_t(VA_Param_array -> array[i], shaderProgram);
+    printf("loadVertexAttribs iterator %d successful\n", i);
+  }
+}
+*/
+
+void reloadShaders(Context_t *ctx) {
   glDeleteProgram(ctx -> shaderProgram);
   glDeleteShader(ctx -> fragmentShader);
   glDeleteShader(ctx -> vertexShader);

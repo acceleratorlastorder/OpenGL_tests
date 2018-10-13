@@ -210,9 +210,7 @@ function contextProgram(canvasId) {
 /**
  * [readFile description]
  * @param  {[String]} path          [description]
- * @param  {[Function]} callBack    [the callback must support as first argument the load event (transferComplete function) event object]
- * @param  {[Object]} callBackArgs  [description]
- * @return {[Void]}                 [Technically the function itself is asynchronous so it doesn't return anything itself but what it can do is calling a function if the transfer is succesful]
+ * @return {[String]}                 [return the response as string]
  */
 async function readFile(path) {
   return await new Promise(resolve => {

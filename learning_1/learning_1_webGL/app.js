@@ -8,6 +8,7 @@ function main_Init() {
 };
 
 function contextProgram(canvasId) {
+  let self = this;
   this.GL = null;
   this.rendering_ctx = {
     shaderProgram: null,
@@ -19,7 +20,11 @@ function contextProgram(canvasId) {
       isInited: false,
       value: null
     },
-    shouldStop: false
+    shouldStop: false,
+    expectedFramePerSec: 60,
+    frameStartTimer: 0,
+    frameEndTimer: 0,
+    frameTimer: 0
   };
   this.getContext = function() {
     let canvas = document.getElementById(canvasId);
@@ -44,13 +49,17 @@ function contextProgram(canvasId) {
    * @return {[type]}       [description]
    */
   this.loadVertexShader = function(fileContent) {
+    this.rendering_ctx.vertexShader.value = this.GL.createShader(this.GL.VERTEX_SHADER);
+    this.GL.shaderSource(this.rendering_ctx.vertexShader.value, fileContent);
+    this.GL.compileShader(this.rendering_ctx.vertexShader.value);
 
-    this.rendering_ctx.vertexShader.value = this.createShader(this.GL, fileContent, this.GL.VERTEX_SHADER);
-    if (!this.rendering_ctx.vertexShader.value) {
-      console.error("loadVertexShader() error");
-      return;
-    }
+    let status = this.GL.getShaderParameter(this.rendering_ctx.vertexShader.value, this.GL.COMPILE_STATUS);
 
+    console.log("loadVertexShader() COMPILE_STATUS: ", status);
+
+
+    let log = this.GL.getShaderInfoLog(this.rendering_ctx.vertexShader.value);
+    console.log("loadVertexShader() log : ", log);
     this.GL.attachShader(this.rendering_ctx.shaderProgram, this.rendering_ctx.vertexShader.value);
 
     this.rendering_ctx.vertexShader.isInited = true;
@@ -64,8 +73,7 @@ function contextProgram(canvasId) {
 
     if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
       var info = gl.getShaderInfoLog(shader);
-      console.error("Could not compile WebGL program. \n\n", info);
-      return null;
+      throw 'Could not compile WebGL program. \n\n' + info;
     }
     return shader;
   }
@@ -76,13 +84,17 @@ function contextProgram(canvasId) {
    * @return {[type]}       [description]
    */
   this.loadFragmentShader = function(fileContent) {
+    this.rendering_ctx.fragmentShader.value = this.GL.createShader(this.GL.FRAGMENT_SHADER);
+    this.GL.shaderSource(this.rendering_ctx.fragmentShader.value, fileContent);
+    this.GL.compileShader(this.rendering_ctx.fragmentShader.value);
 
-    this.rendering_ctx.fragmentShader.value = this.createShader(this.GL, fileContent, this.GL.FRAGMENT_SHADER);
-    if (!this.rendering_ctx.fragmentShader.value) {
-      console.error("loadFragmentShader() error");
-      return;
-    }
+    let status = this.GL.getShaderParameter(this.rendering_ctx.fragmentShader.value, this.GL.COMPILE_STATUS);
 
+    console.log("loadFragmentShader() COMPILE_STATUS: ", status);
+
+
+    let log = this.GL.getShaderInfoLog(this.rendering_ctx.fragmentShader.value);
+    console.log("loadFragmentShader() log : ", log);
     this.GL.attachShader(this.rendering_ctx.shaderProgram, this.rendering_ctx.fragmentShader.value);
 
     this.rendering_ctx.fragmentShader.isInited = true;
@@ -169,20 +181,22 @@ function contextProgram(canvasId) {
 
 
   this.mainLoop = function() {
-    var self = this;
-    setInterval(function() {
-      self.GL.enable(self.GL.DEPTH_TEST);
-      // Set clear color to black, fully opaque
-      self.GL.clearColor(0.0, 0.0, 0.0, 1.0);
-      // Clear the color buffer with specified clear color
-      self.GL.clear(self.GL.COLOR_BUFFER_BIT);
+    /*commenting the loop as it's a static rendering it doesn't need any looping to refresh it's status cause it never change*/
+    //self.rendering_ctx.frameStartTimer = performance.now();
 
-      self.GL.drawArrays(self.GL.TRIANGLES, 0, 3);
+    self.GL.enable(self.GL.DEPTH_TEST);
+    // Set clear color to black, fully opaque
+    self.GL.clearColor(0.0, 0.0, 0.0, 1.0);
+    // Clear the color buffer with specified clear color
+    self.GL.clear(self.GL.COLOR_BUFFER_BIT);
 
-    }, 20);
+    self.GL.drawArrays(self.GL.TRIANGLES, 0, 3);
+    //self.rendering_ctx.frameEndTimer = performance.now();
+    //setTimeout(this.mainLoop, (this.rendering_ctx.frameTimer - (this.rendering_ctx.frameEndTimer - this.rendering_ctx.frameStartTimer)))
   };
 
   this.startRendering = function() {
+    this.rendering_ctx.frameTimer = getMsBetweenFrame(this.rendering_ctx.expectedFramePerSec);
     this.mainLoop();
   };
 
@@ -203,7 +217,9 @@ function contextProgram(canvasId) {
 /**
  * [readFile description]
  * @param  {[String]} path          [description]
- * @return {[String]}               [return the response as string]
+ * @param  {[Function]} callBack    [the callback must support as first argument the load event (transferComplete function) event object]
+ * @param  {[Object]} callBackArgs  [description]
+ * @return {[Void]}                 [Technically the function itself is asynchronous so it doesn't return anything itself but what it can do is calling a function if the transfer is succesful]
  */
 async function readFile(path) {
   return await new Promise(resolve => {
@@ -219,7 +235,8 @@ async function readFile(path) {
     function updateProgress(oEvent) {
       if (oEvent.lengthComputable) {
         var percentComplete = oEvent.loaded / oEvent.total * 100;
-        console.log("loading percentCompleted: ", percentComplete);
+        console.log("percentComplete: ", percentComplete);
+        // ...
       } else {
         // Unable to compute progress information since the total size is unknown
         console.log("can't get computable length");
@@ -250,6 +267,9 @@ async function readFile(path) {
   });
 };
 
+function getMsBetweenFrame(framePerSec) {
+  return (1 / framePerSec);
+}
 
 function loadProgram() {
   let canvasProgram = new contextProgram("canvas");

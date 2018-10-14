@@ -8,6 +8,7 @@ function main_Init() {
 };
 
 function contextProgram(canvasId) {
+  let self = this;
   this.GL = null;
   this.rendering_ctx = {
     shaderProgram: null,
@@ -19,7 +20,11 @@ function contextProgram(canvasId) {
       isInited: false,
       value: null
     },
-    shouldStop: false
+    shouldStop: false,
+    expectedFramePerSec: 60,
+    frameStartTimer: 0,
+    frameEndTimer: 0,
+    frameTimer: 0
   };
   this.getContext = function() {
     let canvas = document.getElementById(canvasId);
@@ -176,20 +181,22 @@ function contextProgram(canvasId) {
 
 
   this.mainLoop = function() {
-    var self = this;
-    setInterval(function() {
-      self.GL.enable(self.GL.DEPTH_TEST);
-      // Set clear color to black, fully opaque
-      self.GL.clearColor(0.0, 0.0, 0.0, 1.0);
-      // Clear the color buffer with specified clear color
-      self.GL.clear(self.GL.COLOR_BUFFER_BIT);
+    /*commenting the loop as it's a static rendering it doesn't need any looping to refresh it's status cause it never change*/
+    //self.rendering_ctx.frameStartTimer = performance.now();
 
-      self.GL.drawArrays(self.GL.TRIANGLES, 0, 3);
+    self.GL.enable(self.GL.DEPTH_TEST);
+    // Set clear color to black, fully opaque
+    self.GL.clearColor(0.0, 0.0, 0.0, 1.0);
+    // Clear the color buffer with specified clear color
+    self.GL.clear(self.GL.COLOR_BUFFER_BIT);
 
-    }, 20);
+    self.GL.drawArrays(self.GL.TRIANGLES, 0, 3);
+    //self.rendering_ctx.frameEndTimer = performance.now();
+    //setTimeout(this.mainLoop, (this.rendering_ctx.frameTimer - (this.rendering_ctx.frameEndTimer - this.rendering_ctx.frameStartTimer)))
   };
 
   this.startRendering = function() {
+    this.rendering_ctx.frameTimer = getMsBetweenFrame(this.rendering_ctx.expectedFramePerSec);
     this.mainLoop();
   };
 
@@ -260,6 +267,9 @@ async function readFile(path) {
   });
 };
 
+function getMsBetweenFrame(framePerSec) {
+  return (1 / framePerSec);
+}
 
 function loadProgram() {
   let canvasProgram = new contextProgram("canvas");

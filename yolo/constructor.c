@@ -1,5 +1,5 @@
 /********************************************************
- *  gcc constructor.c -g -Wall -Wextra -std=c11 -O3 -g  *
+ *  gcc constructor.c -Wall -Wextra -std=c11 -O3 -g  *
  ********************************************************/
 
 #include "stdio.h"

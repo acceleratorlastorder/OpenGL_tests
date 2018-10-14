@@ -17,6 +17,10 @@
 #include "src/texturesManagement/includes/texturesManagement.h"
 
 
+
+#include "src/tests/includes/test.h"
+
+
 /*Default param*/
 int screenWidth = 800;
 int screenHeight = 600;
@@ -179,7 +183,9 @@ int main(void) {
     monitorIsInFullScreen = glfwGetPrimaryMonitor();
   }
 
-  window = glfwCreateWindow(openGL_program_ctx.monitorRes.width, openGL_program_ctx.monitorRes.height, "OpenGL_test", monitorIsInFullScreen, NULL);
+  char *windowTitle = "OpenGL_test FPS: ";
+
+  window = glfwCreateWindow(openGL_program_ctx.monitorRes.width, openGL_program_ctx.monitorRes.height, windowTitle, monitorIsInFullScreen, NULL);
   printf("loadObject\n");
   if (!window) {
     glfwTerminate();
@@ -295,6 +301,9 @@ int main(void) {
 
   glUseProgram(openGL_program_ctx.shaderProgram);
 
+
+  initTest();
+
   /* Loop until the user closes the window */
   while (!glfwWindowShouldClose(window)) {
     /* Render here */
@@ -304,7 +313,6 @@ int main(void) {
     // Clear the screen to white
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 
     //glmc_rotate(openGL_program_ctx.position_model_mat, rad, normalvec3);
     //glUniformMatrix4fv(openGL_program_ctx.uniModel, 1, GL_FALSE, (float *)openGL_program_ctx.position_model_mat);
@@ -606,8 +614,10 @@ int main(void) {
     printf("endLoopTime: %I64d\n", endLoopTime);
     */
     //printf("difftime %lf\n", difftime(endLoopTime, startLoopTime));
+    char title[600] = "";
+    sprintf(title, "opengGL test FPS: %f", (float)(1000/((float)(1000/60) - (float)difftime(endLoopTime, startLoopTime))));
+    glfwSetWindowTitle(window,	title);
     Sleep((1000/60) - difftime(endLoopTime, startLoopTime));
-
   }
 
   glDeleteTextures(1, &openGL_program_ctx.textureID);

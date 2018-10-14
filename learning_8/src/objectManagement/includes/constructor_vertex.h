@@ -8,11 +8,9 @@ typedef struct ArrayOf_VertexAttribParameter_t ArrayOf_VertexAttribParameter_t;
 typedef struct VertexBuferObjectArray_t VertexBuferObjectArray_t;
 typedef struct VertexArray_t VertexArray_t;
 typedef struct ArrayOfVertex_t ArrayOfVertex_t;
-
+/*
+*/
 struct VertexAttribParameter_t {
-  size_t usedSize;
-  size_t sizeOfStructure;
-  size_t sizeOfItems;
   /*index*/
   GLint attributeLocation;
   /**/
@@ -74,7 +72,8 @@ void ArrayOfVertex_t_push(struct ArrayOfVertex_t *self, struct VertexArray_t *ve
 void ArrayOfVertex_t_freeIt(struct ArrayOfVertex_t *self);
 void ArrayOfVertex_t_initArray(struct ArrayOfVertex_t *self, size_t size);
 void VertexBuferObjectArray_t_push(struct VertexBuferObjectArray_t *self, GLuint el);
-//void ArrayOf_VertexAttribParameter_t_push(struct VertexBuferObjectArray_t *self, GLuint el);
+void ArrayOf_VertexAttribParameter_t_initArray(struct ArrayOf_VertexAttribParameter_t *self, size_t size);
+void ArrayOf_VertexAttribParameter_t_push(struct ArrayOf_VertexAttribParameter_t *self, struct VertexAttribParameter_t *verAttrib_s);
 
 
 #endif /* _constructor_vertex_h_  */

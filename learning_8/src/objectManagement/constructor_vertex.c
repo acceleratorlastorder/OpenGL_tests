@@ -4,48 +4,87 @@
 #include "includes/constructor_vertex.h"
 
 
-struct VertexAttribParameter_t {
-  /*index*/
-  GLint attributeLocation;
-  /**/
-  GLint size;
-  /*type of the values to read*/
-  GLenum type;
-  /**/
-  GLboolean normalized;
-  /*gap between the next value in the array (yeah i can't really explain, a picture show it better)*/
-  GLsizei stride;
-  /**/
-  GLvoid *pointer;
-  /*name to use for those value, will be used then in shaders*/
-  char *name;
+//   struct VertexAttribParameter_t {
+//     size_t length;
+//     size_t sizeOfStructure;
+//     size_t sizeOfItems;
+//     size_t fullSizeOfArray;
+//
+//     /*index*/
+//     GLint attributeLocation;
+//     /**/
+//     GLint size;
+//     /*type of the values to read*/
+//     GLenum type;
+//     /**/
+//     GLboolean normalized;
+//     /*gap between the next value in the array (yeah i can't really explain, a picture show it better)*/
+//     GLsizei stride;
+//     /**/
+//     GLvoid *pointer;
+//     /*name to use for those value, will be used then in shaders*/
+//     char *name;
+//   };
+
+/*
+struct ArrayOf_VertexAttribParameter_t {
+  size_t length;
+  size_t sizeOfStructure;
+  size_t sizeOfItems;
+  size_t fullSizeOfArray;
+  VertexAttribParameter_t *array;
 };
+*/
+/*
+ctx -> textureID = glGetAttribLocation(ctx -> shaderProgram, "texcoord");
+glEnableVertexAttribArray(ctx -> textureID);
+glVertexAttribPointer(ctx -> textureID, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (void *)(6 * sizeof(GLfloat)));
+*/
 
-void ArrayOf_VertexAttribParameter_t_push(struct ArrayOf_VertexAttribParameter_t *self,
-                          struct VertexAttribParameter_t *verArr_s) {
+void ArrayOf_VertexAttribParameter_t_push(struct ArrayOf_VertexAttribParameter_t *self, struct VertexAttribParameter_t *verAttrib_s) {
 
-  self->sizeOfItems += sizeof(*verArr_s);
+  self->sizeOfItems += sizeof(VertexAttribParameter_t);
 
+  puts("self->sizeOfItems");
   // Create temp value to keep the original array safe and avoid memory leak
-  VertexArray_t *tempArray = realloc(self->VertexArray_s, self->sizeOfItems);
+  VertexAttribParameter_t *tempArray = realloc(self->array, self->sizeOfItems);
   // Check if everything happend normally
-  if (tempArray == 0) {
-    puts("couldn't re-allocate the memory to push in the function "
-         "ArrayOf_VertexAttribParameter_t_push()!!");
-    ArrayOfVertex_t_freeIt(self);
+  if (tempArray == NULL) {
+    puts("couldn't re-allocate the memory to push in the function ArrayOf_VertexAttribParameter_t_push()!!");
+    //ArrayOfVertex_t_freeIt(self);
     return;
   }
-  // Assign the original array the temp array value after check
-  self->VertexArray_s = tempArray;
 
+  puts("Assign the original array the temp array value after check");
+  // Assign the original array the temp array value after check
+  self->array = tempArray;
+
+  printf("I give all property of the given structure into the new one\n");
   // I give all property of the given structure into the new one
-  self->VertexArray_s[self->length] = *verArr_s;
+  self->array[self->length] = *verAttrib_s;
+
+  printf("before self->array[self->length].name: %s\n", self->array[self->length].name);
+
+  //strcpy(self->array[self->length].name, verAttrib_s->name);
+
+
+  free(verAttrib_s->name);
+
+  //memset(verAttrib_s->name, '\0', strlen(verAttrib_s->name));
+  printf("after self->array[self->length].name: %s\n", self->array[self->length].name);
+
+  // As we just added an element we increment it by one
+  self->length += 1;
+
+
+
+
+
+/*
 
   // Allocation of memory and also removing the reference to the previous
-  // pointer,
-  //      which will be usefull if the structure is freed we can keep this array
-  self->VertexArray_s[self->length].array =
-      malloc((verArr_s->length * sizeof(verArr_s->array[0])));
+  //    pointer, which will be usefull if the structure is freed we can keep this array
+  self->VertexArray_s[self->length].array = malloc((verArr_s->length * sizeof(verArr_s->array[0])));
   // Assign freshly allocated array with value from the old array
   for (size_t i = verArr_s->length; i-- > 0;) {
     self->VertexArray_s[self->length].array[i] = verArr_s->array[i];
@@ -53,7 +92,7 @@ void ArrayOf_VertexAttribParameter_t_push(struct ArrayOf_VertexAttribParameter_t
 
   // As we just added an element we increment it by one
   self->length += 1;
-
+*/
   /************************************************************************************
    * Here we simply keep track of the size in byte of the "self" structure,           *
    *    as we simply push a new structure into the array of structure,                *
@@ -61,11 +100,25 @@ void ArrayOf_VertexAttribParameter_t_push(struct ArrayOf_VertexAttribParameter_t
    *    since the last level array structure follow the same logic and                *
    *    keep track of it's size                                                       *
    ************************************************************************************/
-  self->sizeOfItems += verArr_s->sizeOfStructure;
+  //self->sizeOfItems += verArr_s->sizeOfStructure;
   return;
 };
 
+void ArrayOf_VertexAttribParameter_t_initArray(struct ArrayOf_VertexAttribParameter_t *self, size_t size) {
+  self->sizeOfItems = size * sizeof(VertexAttribParameter_t);
+  self->array = malloc(self->sizeOfItems);
+  if (self->array == NULL) {
+    puts("memory allocation failed at ArrayOfVertex_t_initArray()");
+    self->sizeOfItems = 0;
+    return;
+  }
+  self->length = size;
+  self->sizeOfStructure = sizeof(*self) + self->sizeOfItems;
+  return;
+}
 
+
+/*
 void VertexBuferObjectArray_t_push(struct VertexBuferObjectArray_t *self, GLuint el) {
   if (self->array == NULL && self->length != 0) {
     puts("the pointer \"self->array\" is null in the function "
@@ -92,6 +145,7 @@ void VertexBuferObjectArray_t_push(struct VertexBuferObjectArray_t *self, GLuint
     return;
   }
 };
+*/
 
 void VertexArray_t_allocate_effective_size(struct VertexArray_t *self) {
   if (self->array == NULL && self->length != 0) {
@@ -207,8 +261,7 @@ void VertexArray_t_freeIt(struct VertexArray_t *self) {
   return;
 }
 
-void ArrayOfVertex_t_push(struct ArrayOfVertex_t *self,
-                          struct VertexArray_t *verArr_s) {
+void ArrayOfVertex_t_push(struct ArrayOfVertex_t *self, struct VertexArray_t *verArr_s) {
 
   self->sizeOfItems += sizeof(*verArr_s);
 
@@ -228,10 +281,8 @@ void ArrayOfVertex_t_push(struct ArrayOfVertex_t *self,
   self->VertexArray_s[self->length] = *verArr_s;
 
   // Allocation of memory and also removing the reference to the previous
-  // pointer,
-  //      which will be usefull if the structure is freed we can keep this array
-  self->VertexArray_s[self->length].array =
-      malloc((verArr_s->length * sizeof(verArr_s->array[0])));
+  // pointer, which will be usefull if the structure is freed we can keep this array
+  self->VertexArray_s[self->length].array = malloc((verArr_s->length * sizeof(verArr_s->array[0])));
   // Assign freshly allocated array with value from the old array
   for (size_t i = verArr_s->length; i-- > 0;) {
     self->VertexArray_s[self->length].array[i] = verArr_s->array[i];

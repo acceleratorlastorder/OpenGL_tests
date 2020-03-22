@@ -15,7 +15,7 @@
 #include "src/vertexManagement/includes/vertexs.h"
 #include "src/texturesManagement/includes/texturesManagement.h"
 
-  #include <sys/time.h>
+#include <sys/time.h>
 
 screenRes monitorRes = {.width = 800, .height = 600};
 
@@ -244,6 +244,18 @@ int main(void) {
     printf("init process got OpenGL error: %d \n", err);
   }
 
+  vec3 vec3Array[] = {
+   {2, 0, 0}, {0, 2, 0}, {0, 0, 2}, {0, 0, -4},
+   {0, -2, 0}, {0, -2, 0}, {0, 0, 2}, {0, 0, 2},
+   {0, 2, 0}, {-2, 0, -2}, {2, 0, 0}, {0, 2, 0},
+   {0, 0, 2}, {0, 0, -4}, {0, -2, 0}, {0, -2, 0},
+   {0, 0, 2}, {0, 0, 2}, {0, 2, 0}, {-2, 2, -2},
+   {0, -4, 0}, {0, 0, 2}, {0, 2, 0}, {0, 2, 0},
+   {0, 0, -4}, {0, -2, 0}, {0, -2, 0}, {0, 2, 2},
+   {-2, 0, 0}, {0, 0, 2}, {0, 0, -4}, {0, 2, 0},
+   {0, 0, 2}, {0, 0, 2}, {0, -4, 0}, {0, 0, -2},
+   {0, 0, -2}, {2, 2, 2}
+  };
 
   /* Loop until the user closes the window */
   while (!glfwWindowShouldClose(window)) {
@@ -262,277 +274,12 @@ int main(void) {
     // Draw a rectangle from the 2 triangles using 6 indices
     //glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-
-
-
-    glm_translate(openGL_program_ctx.position_model_mat, (vec3){2, 0, 0});
-    glUniformMatrix4fv(openGL_program_ctx.uniModel, 1, GL_FALSE, (float *)openGL_program_ctx.position_model_mat);
-
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-
-
-
-    glm_translate(openGL_program_ctx.position_model_mat, (vec3){0, 2, 0});
-    glUniformMatrix4fv(openGL_program_ctx.uniModel, 1, GL_FALSE, (float *)openGL_program_ctx.position_model_mat);
-
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-
-
-
-    glm_translate(openGL_program_ctx.position_model_mat, (vec3){0, 0, 2});
-    glUniformMatrix4fv(openGL_program_ctx.uniModel, 1, GL_FALSE, (float *)openGL_program_ctx.position_model_mat);
-
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-
-
-
-    glm_translate(openGL_program_ctx.position_model_mat, (vec3){0, 0, -4});
-    glUniformMatrix4fv(openGL_program_ctx.uniModel, 1, GL_FALSE, (float *)openGL_program_ctx.position_model_mat);
-
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-
-
-
-    glm_translate(openGL_program_ctx.position_model_mat, (vec3){0, -2, 0});
-    glUniformMatrix4fv(openGL_program_ctx.uniModel, 1, GL_FALSE, (float *)openGL_program_ctx.position_model_mat);
-
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-
-
-
-    glm_translate(openGL_program_ctx.position_model_mat, (vec3){0, -2, 0});
-    glUniformMatrix4fv(openGL_program_ctx.uniModel, 1, GL_FALSE, (float *)openGL_program_ctx.position_model_mat);
-
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-
-
-
-    glm_translate(openGL_program_ctx.position_model_mat, (vec3){0, 0, 2});
-    glUniformMatrix4fv(openGL_program_ctx.uniModel, 1, GL_FALSE, (float *)openGL_program_ctx.position_model_mat);
-
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-
-
-
-    glm_translate(openGL_program_ctx.position_model_mat, (vec3){0, 0, 2});
-    glUniformMatrix4fv(openGL_program_ctx.uniModel, 1, GL_FALSE, (float *)openGL_program_ctx.position_model_mat);
-
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-
-
-
-    glm_translate(openGL_program_ctx.position_model_mat, (vec3){0, 2, 0});
-    glUniformMatrix4fv(openGL_program_ctx.uniModel, 1, GL_FALSE, (float *)openGL_program_ctx.position_model_mat);
-
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-
-
-
-
-
-
-    glm_translate(openGL_program_ctx.position_model_mat, (vec3){-2, 0, -2});
-    glUniformMatrix4fv(openGL_program_ctx.uniModel, 1, GL_FALSE, (float *)openGL_program_ctx.position_model_mat);
-
-
-
-
-
-
-    glm_translate(openGL_program_ctx.position_model_mat, (vec3){2, 0, 0});
-    glUniformMatrix4fv(openGL_program_ctx.uniModel, 1, GL_FALSE, (float *)openGL_program_ctx.position_model_mat);
-
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-
-
-
-    glm_translate(openGL_program_ctx.position_model_mat, (vec3){0, 2, 0});
-    glUniformMatrix4fv(openGL_program_ctx.uniModel, 1, GL_FALSE, (float *)openGL_program_ctx.position_model_mat);
-
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-
-
-
-    glm_translate(openGL_program_ctx.position_model_mat, (vec3){0, 0, 2});
-    glUniformMatrix4fv(openGL_program_ctx.uniModel, 1, GL_FALSE, (float *)openGL_program_ctx.position_model_mat);
-
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-
-
-
-    glm_translate(openGL_program_ctx.position_model_mat, (vec3){0, 0, -4});
-    glUniformMatrix4fv(openGL_program_ctx.uniModel, 1, GL_FALSE, (float *)openGL_program_ctx.position_model_mat);
-
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-
-
-
-    glm_translate(openGL_program_ctx.position_model_mat, (vec3){0, -2, 0});
-    glUniformMatrix4fv(openGL_program_ctx.uniModel, 1, GL_FALSE, (float *)openGL_program_ctx.position_model_mat);
-
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-
-
-
-    glm_translate(openGL_program_ctx.position_model_mat, (vec3){0, -2, 0});
-    glUniformMatrix4fv(openGL_program_ctx.uniModel, 1, GL_FALSE, (float *)openGL_program_ctx.position_model_mat);
-
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-
-
-
-    glm_translate(openGL_program_ctx.position_model_mat, (vec3){0, 0, 2});
-    glUniformMatrix4fv(openGL_program_ctx.uniModel, 1, GL_FALSE, (float *)openGL_program_ctx.position_model_mat);
-
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-
-
-
-    glm_translate(openGL_program_ctx.position_model_mat, (vec3){0, 0, 2});
-    glUniformMatrix4fv(openGL_program_ctx.uniModel, 1, GL_FALSE, (float *)openGL_program_ctx.position_model_mat);
-
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-
-
-
-    glm_translate(openGL_program_ctx.position_model_mat, (vec3){0, 2, 0});
-    glUniformMatrix4fv(openGL_program_ctx.uniModel, 1, GL_FALSE, (float *)openGL_program_ctx.position_model_mat);
-
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-
-
-
-
-    /**/
-
-    glm_translate(openGL_program_ctx.position_model_mat, (vec3){-2, 2, -2});
-    glUniformMatrix4fv(openGL_program_ctx.uniModel, 1, GL_FALSE, (float *)openGL_program_ctx.position_model_mat);
-
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-
-
-
-    glm_translate(openGL_program_ctx.position_model_mat, (vec3){0, -4, 0});
-    glUniformMatrix4fv(openGL_program_ctx.uniModel, 1, GL_FALSE, (float *)openGL_program_ctx.position_model_mat);
-
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-
-
-
-    glm_translate(openGL_program_ctx.position_model_mat, (vec3){0, 0, 2});
-    glUniformMatrix4fv(openGL_program_ctx.uniModel, 1, GL_FALSE, (float *)openGL_program_ctx.position_model_mat);
-
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-
-
-    glm_translate(openGL_program_ctx.position_model_mat, (vec3){0, 2, 0});
-    glUniformMatrix4fv(openGL_program_ctx.uniModel, 1, GL_FALSE, (float *)openGL_program_ctx.position_model_mat);
-
-
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-
-
-
-    glm_translate(openGL_program_ctx.position_model_mat, (vec3){0, 2, 0});
-    glUniformMatrix4fv(openGL_program_ctx.uniModel, 1, GL_FALSE, (float *)openGL_program_ctx.position_model_mat);
-
-
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-
-
-    glm_translate(openGL_program_ctx.position_model_mat, (vec3){0, 0, -4});
-    glUniformMatrix4fv(openGL_program_ctx.uniModel, 1, GL_FALSE, (float *)openGL_program_ctx.position_model_mat);
-
-
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-
-
-    glm_translate(openGL_program_ctx.position_model_mat, (vec3){0, -2, 0});
-    glUniformMatrix4fv(openGL_program_ctx.uniModel, 1, GL_FALSE, (float *)openGL_program_ctx.position_model_mat);
-
-
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-
-
-    glm_translate(openGL_program_ctx.position_model_mat, (vec3){0, -2, 0});
-    glUniformMatrix4fv(openGL_program_ctx.uniModel, 1, GL_FALSE, (float *)openGL_program_ctx.position_model_mat);
-
-
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-
-
-    glm_translate(openGL_program_ctx.position_model_mat, (vec3){0, 2, 2});
-    glUniformMatrix4fv(openGL_program_ctx.uniModel, 1, GL_FALSE, (float *)openGL_program_ctx.position_model_mat);
-
-
-
-    glm_translate(openGL_program_ctx.position_model_mat, (vec3){-2, 0, 0});
-    glUniformMatrix4fv(openGL_program_ctx.uniModel, 1, GL_FALSE, (float *)openGL_program_ctx.position_model_mat);
-
-
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-
-
-    glm_translate(openGL_program_ctx.position_model_mat, (vec3){0, 0, 2});
-    glUniformMatrix4fv(openGL_program_ctx.uniModel, 1, GL_FALSE, (float *)openGL_program_ctx.position_model_mat);
-
-
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-
-
-    glm_translate(openGL_program_ctx.position_model_mat, (vec3){0, 0, -4});
-    glUniformMatrix4fv(openGL_program_ctx.uniModel, 1, GL_FALSE, (float *)openGL_program_ctx.position_model_mat);
-
-
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-
-
-    glm_translate(openGL_program_ctx.position_model_mat, (vec3){0, 2, 0});
-    glUniformMatrix4fv(openGL_program_ctx.uniModel, 1, GL_FALSE, (float *)openGL_program_ctx.position_model_mat);
-
-
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-
-
-
-    glm_translate(openGL_program_ctx.position_model_mat, (vec3){0, 0, 2});
-    glUniformMatrix4fv(openGL_program_ctx.uniModel, 1, GL_FALSE, (float *)openGL_program_ctx.position_model_mat);
-
-
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-
-
-    glm_translate(openGL_program_ctx.position_model_mat, (vec3){0, 0, 2});
-    glUniformMatrix4fv(openGL_program_ctx.uniModel, 1, GL_FALSE, (float *)openGL_program_ctx.position_model_mat);
-
-
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-
-
-    glm_translate(openGL_program_ctx.position_model_mat, (vec3){0, -4, 0});
-    glUniformMatrix4fv(openGL_program_ctx.uniModel, 1, GL_FALSE, (float *)openGL_program_ctx.position_model_mat);
-
-
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-
-
-    glm_translate(openGL_program_ctx.position_model_mat, (vec3){0, 0, -2});
-    glUniformMatrix4fv(openGL_program_ctx.uniModel, 1, GL_FALSE, (float *)openGL_program_ctx.position_model_mat);
-
-
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-
-
-    glm_translate(openGL_program_ctx.position_model_mat, (vec3){0, 0, -2});
-    glUniformMatrix4fv(openGL_program_ctx.uniModel, 1, GL_FALSE, (float *)openGL_program_ctx.position_model_mat);
-
-
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-
-
-    glm_translate(openGL_program_ctx.position_model_mat, (vec3){2, 2, 2});
-    glUniformMatrix4fv(openGL_program_ctx.uniModel, 1, GL_FALSE, (float *)openGL_program_ctx.position_model_mat);
+    for (size_t i = 0; i < 38; i++) {
+     glDrawArrays(GL_TRIANGLES, 0, 36);
+
+     glm_translate(openGL_program_ctx.position_model_mat, vec3Array[i]);
+     glUniformMatrix4fv(openGL_program_ctx.uniModel, 1, GL_FALSE, (float *)openGL_program_ctx.position_model_mat);
+    }
 
 
     //drawPlaneSurface(&openGL_program_ctx);

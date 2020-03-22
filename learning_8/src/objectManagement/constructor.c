@@ -2,7 +2,6 @@
 #include "stdlib.h"
 
 
-
 #include "includes/constructor.h"
 
 void VertexArray_t_allocate_effective_size(struct VertexArray_t *self) {

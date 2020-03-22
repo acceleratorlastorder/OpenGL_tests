@@ -102,6 +102,7 @@ void drawPlaneSurface(Context_t *ctx){
 //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     //start it
     glEnable(GL_STENCIL_TEST);
+    
         // Draw floor
         glStencilFunc(GL_ALWAYS, 1, 0xFF); // Set any stencil to 1
         glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
@@ -123,7 +124,7 @@ void drawPlaneSurface(Context_t *ctx){
         glUniformMatrix4fv(ctx -> uniModel, 1, GL_FALSE, (float *)ctx -> position_model_mat);
 
         glUniform3f(ctx -> uniColor, 0.3f, 0.3f, 0.3f);
-          glDrawArrays(GL_TRIANGLES, 0, 36);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
         glUniform3f(ctx -> uniColor, 1.0f, 1.0f, 1.0f);
 
     //end it

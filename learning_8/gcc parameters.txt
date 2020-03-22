@@ -62,4 +62,4 @@ if(release){
 if(ryzen){
 	-march="znver1"
 }
--o test_3
+-o learning_8

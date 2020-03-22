@@ -45,6 +45,8 @@ struct Context_t {
   vec3 eye;
   mat4 position_model_mat;
   GLint uniModel;
+  vec3 center;
+  vec3 up;
   VertexArray_t VertexArray_s;
   ArrayOfVertex_t ArrayOfVertex_s;
 };

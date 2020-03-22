@@ -15,10 +15,8 @@
 /**
 * [Compiling the given shader onto the GPU]
 */
-void compileVertexShader(char *vertexShaderSource, GLuint *shaderProgram,
-                         GLuint *vertexShader) {
-  glShaderSource(*vertexShader, 1, (const GLchar **)(&vertexShaderSource),
-                 NULL);
+void compileVertexShader(char *vertexShaderSource, GLuint *shaderProgram, GLuint *vertexShader) {
+  glShaderSource(*vertexShader, 1, (const GLchar **)(&vertexShaderSource), NULL);
   glCompileShader(*vertexShader);
 
 #ifdef debugBuild
@@ -42,11 +40,9 @@ void compileVertexShader(char *vertexShaderSource, GLuint *shaderProgram,
 /**
 * [Compiling the given fragment shader onto the GPU]
 */
-void compileFragmentShader(char *fragmentShaderSource, GLuint *shaderProgram,
-                           GLuint *fragmentShader) {
+void compileFragmentShader(char *fragmentShaderSource, GLuint *shaderProgram, GLuint *fragmentShader) {
 
-  glShaderSource(*fragmentShader, 1, (const GLchar **)(&fragmentShaderSource),
-                 NULL);
+  glShaderSource(*fragmentShader, 1, (const GLchar **)(&fragmentShaderSource), NULL);
   glCompileShader(*fragmentShader);
 
   GLint status;
@@ -65,8 +61,7 @@ void compileFragmentShader(char *fragmentShaderSource, GLuint *shaderProgram,
   // glAttachShader(*shaderProgram, *fragmentShader);
 }
 
-void loadShaders(GLuint *shaderProgram, GLuint *fragmentShader,
-                 GLuint *vertexShader) {
+void loadShaders(GLuint *shaderProgram, GLuint *fragmentShader, GLuint *vertexShader) {
   char fileContent[666];
   char *filePath = "includes/shaders/vertexShader.glsl";
 
@@ -88,13 +83,13 @@ void loadShaders(GLuint *shaderProgram, GLuint *fragmentShader,
   *fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
   compileFragmentShader(fileContent, shaderProgram, fragmentShader);
 
-  //   attach vertex shader
+  /* attach vertex shader */
   glAttachShader(*shaderProgram, *vertexShader);
-  //   attach fragment shader
+  /* attach fragment shader */
   glAttachShader(*shaderProgram, *fragmentShader);
   glBindFragDataLocation(*shaderProgram, 0, "outColor");
 
-  // remove string
+  /* remove string */
   removeStringFromMemory(fileContent);
 
   glLinkProgram(*shaderProgram);

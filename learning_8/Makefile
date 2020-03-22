@@ -4,8 +4,9 @@ ARCHFLAGS = -march=znver1
 LANG_VERSION = -std=c11
 OPTI_lEVEL = -O3
 LIBS = -lopengl32 -lcglm -lglfw3 -lkernel32 -luser32 -lgdi32 -lws2_32
+CCONFFLAGS = -Wall -mtune=native
 VARIABLES = -DdebugBuild
-CFLAGS = $(VARIABLES) $(LIBS) -Wall -mtune=native $(LANG_VERSION) $(OPTI_lEVEL) $(ARCHFLAGS) -o $(EXEC_NAME)
+CFLAGS = $(VARIABLES) $(LIBS) $(CCONFFLAGS) $(LANG_VERSION) $(OPTI_lEVEL) $(ARCHFLAGS) -o $(EXEC_NAME)
 
 
 CLEAN_TARGET = *.o
@@ -23,10 +24,9 @@ OBJECTS = filesManager.o getBmp_textures.o pictureManagement.o \
 				opperation.o constructor.o physics.o glad.o main.o
 
 all: compile
-		@echo "Compiling Project"/proc/cpuinfo
+		@echo "Project compiled"
 
 compile: main.o
-
 		@echo "Compiling Project"
 		$(COMPILER) $(OBJECTS) $(CFLAGS)
 
@@ -66,7 +66,7 @@ vertexs.o:
 
 shadersManager.o: glad.o
 	@echo "Compiling shadersManager"
-	$(COMPILER) -o shadersManager.o -c src/shadersManagement/shadersManager.c -lcglm -lglfw3
+	$(COMPILER) -o shadersManager.o -c src/shadersManagement/shadersManager.c
 
 texturesManagement.o:
 	@echo "Compiling texturesManagement"

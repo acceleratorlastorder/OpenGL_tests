@@ -19,12 +19,36 @@
 
 screenRes monitorRes = {.width = 800, .height = 600};
 
+
 void moveCamera(Context_t *openGL_program_ctx){
   openGL_program_ctx -> eye[0] = 8.0f;
   openGL_program_ctx -> eye[1] = 8.0f;
   openGL_program_ctx -> eye[2] = 2.0f;
 }
 
+
+void getCenter(vec3 *center, GLFWwindow* window){
+  double xpos = 0.0;
+  double ypos = 0.0;
+  glfwGetCursorPos(window,	&xpos,	&ypos);
+  /*
+  printf("xpos %lf\n", xpos);
+  printf("ypos %lf\n", ypos);
+  */
+
+  *center[0] = (float)xpos;
+  *center[1] = (float)ypos;
+  return;
+ }
+
+static void mouse_callback(GLFWwindow* window, int button, int action, int mods){
+ printf("yooo button: %d, action: %d, mods: %d\n", button, action, mods);
+ if(button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS){
+  Context_t* openGL_ctx = (Context_t *)glfwGetWindowUserPointer(window);
+  printf("left !!!\n");
+  /*getCenter(openGL_ctx -> center, window);*/
+ }
+}
 
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
@@ -50,9 +74,16 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
       }else if(key == GLFW_KEY_DOWN){
         openGL_ctx -> eye[1] += 1.0f;
       }
-      vec3 center = {0.0f, 0.0f, 0.0f};
-      vec3 up = {0.0f, 0.0f, 1.0f};
-      glm_lookat(openGL_ctx -> eye, center, up, openGL_ctx -> view);
+      /*
+      openGL_ctx -> center[0] = 0.0f;
+      openGL_ctx -> center[1] = 0.0f;
+      openGL_ctx -> center[2] = 0.0f;
+
+      openGL_ctx -> up[0] = 0.0f;
+      openGL_ctx -> up[1] = 0.0f;
+      openGL_ctx -> up[2] = 1.0f;
+      */
+      glm_lookat(openGL_ctx -> eye, openGL_ctx -> center, openGL_ctx -> up, openGL_ctx -> view);
       glUniformMatrix4fv(openGL_ctx -> uniView, 1, GL_FALSE, (float *)openGL_ctx -> view);
     }
   }
@@ -102,7 +133,7 @@ void drawPlaneSurface(Context_t *ctx){
 //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     //start it
     glEnable(GL_STENCIL_TEST);
-    
+
         // Draw floor
         glStencilFunc(GL_ALWAYS, 1, 0xFF); // Set any stencil to 1
         glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
@@ -165,6 +196,8 @@ int main(void) {
     glfwTerminate();
     return -1;
   }
+
+  glfwSetMouseButtonCallback(window, mouse_callback);
   glfwSetKeyCallback(window, key_callback);
 
   /* Make the window's context current */
@@ -218,13 +251,15 @@ int main(void) {
   openGL_program_ctx.eye[1] = 8.0f;
   openGL_program_ctx.eye[2] = 2.0f;
 
+  openGL_program_ctx.center[0] = 0.0f;
+  openGL_program_ctx.center[1] = 0.0f;
+  openGL_program_ctx.center[2] = 0.0f;
 
+  openGL_program_ctx.up[0] = 0.0f;
+  openGL_program_ctx.up[1] = 0.0f;
+  openGL_program_ctx.up[2] = 1.0f;
 
-  vec3 center = {0.0f, 0.0f, 0.0f};
-  vec3 up = {0.0f, 0.0f, 1.0f};
-  glm_lookat(openGL_program_ctx.eye, center, up, openGL_program_ctx.view);
-
-
+  glm_lookat(openGL_program_ctx.eye, openGL_program_ctx.center, openGL_program_ctx.up, openGL_program_ctx.view);
   glUniformMatrix4fv(openGL_program_ctx.uniView, 1, GL_FALSE, (float *)openGL_program_ctx.view);
 
   mat4 proj;
@@ -234,8 +269,6 @@ int main(void) {
   glUniformMatrix4fv(openGL_program_ctx.uniProj, 1, GL_FALSE, (float *)proj);
 
   checkFrameBufferStatus();
-
-
 
   float rad = glm_rad(5.0f);
   vec3 normalvec3 = {0.0f, 0.0f, 1.0f};
@@ -264,16 +297,15 @@ int main(void) {
     startLoopTime = time(NULL);
     /*printf("currentTime with glfw: %lf\n", currentTime);*/
 
-    // Clear the screen to white
+    /* Clear the screen to white */
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    glmc_rotate(openGL_program_ctx.position_model_mat, rad, normalvec3);
+    /*glUniformMatrix4fv(openGL_program_ctx.uniModel, 1, GL_FALSE, (float *)openGL_program_ctx.position_model_mat);*/
 
-    //glmc_rotate(openGL_program_ctx.position_model_mat, rad, normalvec3);
-    //glUniformMatrix4fv(openGL_program_ctx.uniModel, 1, GL_FALSE, (float *)openGL_program_ctx.position_model_mat);
-
-    // Draw a rectangle from the 2 triangles using 6 indices
-    //glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+    /* Draw a rectangle from the 2 triangles using 6 indices */
+    /*glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);*/
 
     for (size_t i = 0; i < 38; i++) {
      glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -281,9 +313,17 @@ int main(void) {
      glm_translate(openGL_program_ctx.position_model_mat, vec3Array[i]);
      glUniformMatrix4fv(openGL_program_ctx.uniModel, 1, GL_FALSE, (float *)openGL_program_ctx.position_model_mat);
     }
+    /*
+    printf("before\n");
+    print_mat3(&openGL_program_ctx.center, 0);
+    getCenter(&openGL_program_ctx.center, window);
+    printf("after\n");
+    print_mat3(&openGL_program_ctx.center, 0);
+    glm_lookat(openGL_program_ctx.eye, openGL_program_ctx.center, openGL_program_ctx.up, openGL_program_ctx.view);
+    glUniformMatrix4fv(openGL_program_ctx.uniView, 1, GL_FALSE, (float *)openGL_program_ctx.view);
 
-
-    //drawPlaneSurface(&openGL_program_ctx);
+    */
+    /*drawPlaneSurface(&openGL_program_ctx);*/
 
     while ((err = glGetError()) != GL_NO_ERROR) {
       printf("main loop got OpenGL error: %d \n", err);

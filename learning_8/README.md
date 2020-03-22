@@ -1,3 +1,3 @@
-5 rotating cube
+27 cube
 
 still need to make them rotate independently :)

@@ -1,30 +1,30 @@
-#pragma once
-
-#ifndef _constructor_h_
-#define _constructor_h_
-
 #include <cglm/call.h>
-#include "../../../includes/glad/glad.h"
+typedef int GLint;
+typedef unsigned int GLuint;
+typedef float GLfloat;
 
 
-#include "./constructor_vertex.h"
-
-
-typedef struct ScreenResolution_t ScreenResolution_t;
-typedef struct CameraParamater_T CameraParamater_T;
+typedef struct VertexArray_t VertexArray_t;
+typedef struct ArrayOfVertex_t ArrayOfVertex_t;
 typedef struct Context_t Context_t, *ContextType;
 
-struct ScreenResolution_t {
-  int width;
-  int height;
-  mat4 proj;
+/* Array of GLfloat since float is different depending the system it's better to
+ use GLfloat to increase the portability of the program*/
+struct VertexArray_t {
+  size_t length;
+  size_t usedSize;
+  size_t sizeOfStructure;
+  size_t sizeOfItems;
+  GLfloat *array;
 };
 
-struct CameraParamater_T {
-  vec3 eye;
-  vec3 center;
-  vec3 up;
-  mat4 view;
+//Array of vertex Array
+struct ArrayOfVertex_t {
+  size_t length;
+  size_t sizeOfStructure;
+  size_t sizeOfItems;
+  size_t fullSizeOfArray;
+  VertexArray_t *VertexArray_s;
 };
 
 //Creating a context to easily share necessary variable with any function
@@ -32,7 +32,7 @@ struct Context_t {
   GLuint vao;
   GLuint ebo;
   GLuint textureID;
-  GLuint frameBuffer;
+  GLuint vbufferObj;
   GLuint shaderProgram;
   GLuint fragmentShader;
   GLuint vertexShader;
@@ -45,19 +45,16 @@ struct Context_t {
   vec3 eye;
   mat4 position_model_mat;
   GLint uniModel;
-  GLuint vbufferObj;
-  GLuint vaoQuad;
-  GLuint vboQuad;
-  CameraParamater_T cameraParam;
-  VertexBuferObjectArray_t VBO_ARRAY;
-  GLuint VBO_FRAMEBUFFER;
-  GLuint *vboArray;
-  ScreenResolution_t monitorRes;
   VertexArray_t VertexArray_s;
   ArrayOfVertex_t ArrayOfVertex_s;
 };
 
-
+/*  DATA TYPE management FUNCTIONS  */
+void VertexArray_t_allocate_effective_size(struct VertexArray_t *self);
+void VertexArray_t_push(struct VertexArray_t *self, GLfloat el);
+void VertexArray_t_initArray(struct VertexArray_t *self, size_t size);
+void VertexArray_t_freeIt(struct VertexArray_t *self);
+void ArrayOfVertex_t_push(struct ArrayOfVertex_t *self, struct VertexArray_t *verArr_s);
+void ArrayOfVertex_t_freeIt(struct ArrayOfVertex_t *self);
+void ArrayOfVertex_t_initArray(struct ArrayOfVertex_t *self, size_t size);
 void init_mat4_with_GLM_MAT4_IDENTITY_INIT(mat4 matrice);
-
-#endif /* _constructor_h_ */

@@ -3,6 +3,3 @@ void compileFragmentShader(char *fragmentShaderSource, GLuint *shaderProgram, GL
 void loadShaders(GLuint *shaderProgram, GLuint *fragmentShader, GLuint *vertexShader);
 void setShadersAttributes(Context_t *ctx);
 void reloadShaders(Context_t *ctx);
-
-
-void setVertexAttribFrom_VertexAttribParameter_t(VertexAttribParameter_t *VA_Param, GLuint shaderProgram);

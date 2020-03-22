@@ -125,17 +125,28 @@ GLfloat vertices[] = {
     -1.0f, -1.0f, -0.5f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f
 };
 
-// Quad vertices
-GLfloat quadVertices[] = {
-    -1.0f,  1.0f,  0.0f, 1.0f,
-     1.0f,  1.0f,  1.0f, 1.0f,
-     1.0f, -1.0f,  1.0f, 0.0f,
 
-     1.0f, -1.0f,  1.0f, 0.0f,
-    -1.0f, -1.0f,  0.0f, 0.0f,
-    -1.0f,  1.0f,  0.0f, 1.0f
+/*
+GLfloat vertices[] = {
+    -0.5f,  0.5f, 1.0f, 0.0f, 0.0f, // Top-left
+     0.5f,  0.5f, 0.0f, 1.0f, 0.0f, // Top-right
+     0.5f, -0.5f, 0.0f, 0.0f, 1.0f, // Bottom-right
+    -0.5f, -0.5f, 1.0f, 1.0f, 1.0f  // Bottom-left
 };
-
+*/
+/*
+GLfloat vertices[] = {
+  // X      Y     Z     R     G     B     U     V
+    -0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, // Top-left
+     0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // Top-right
+     0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, // Bottom-right
+    -0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f  // Bottom-left
+};
+*/
+GLuint elements[] = {
+    0, 1, 2,
+    2, 3, 0
+};
 
 void uploadVertexOntoTheGPU(Context_t *ctx) {
 
@@ -147,42 +158,9 @@ void uploadVertexOntoTheGPU(Context_t *ctx) {
   printf("vbufferObj: %d\n", ctx -> vbufferObj);
 #endif
 
-  glBindBuffer(GL_ARRAY_BUFFER, ctx -> vbufferObj);
-  glBufferData(GL_ARRAY_BUFFER, ctx->ArrayOfVertex_s.VertexArray_s[0].sizeOfItems, ctx->ArrayOfVertex_s.VertexArray_s[0].array, GL_STATIC_DRAW);
+glBindBuffer(GL_ARRAY_BUFFER, ctx -> vbufferObj);
+glBufferData(GL_ARRAY_BUFFER, ctx->ArrayOfVertex_s.VertexArray_s[0].sizeOfItems, ctx->ArrayOfVertex_s.VertexArray_s[0].array, GL_STATIC_DRAW);
 
-
-
-
-
-/**************************************************************************************************/
-/*
-  glGenVertexArrays(1, &ctx -> vaoQuad);
-  glBindVertexArray(ctx -> vaoQuad);
-
-  glGenBuffers(1, &ctx -> vboQuad);
-#ifdef debugBuild
-  printf("vbufferObj: %d\n", ctx -> vboQuad);
-#endif
-
-  glBindBuffer(GL_ARRAY_BUFFER, ctx -> vboQuad);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), quadVertices, GL_STATIC_DRAW);
-
-*/
-
-
-
-
-
-/*
-const uint32_t countVBOs = 3;
-GLuint VBO[countVBOs];
-glGenBuffers(countVBOs, VBO);
-#ifdef debugBuild
-printf("!!!!!!!!!!!!!!VBO: %d\n", VBO[0]);
-printf("!!!!!!!!!!!!!!VBO: %d\n", VBO[1]);
-printf("!!!!!!!!!!!!!!VBO: %d\n", VBO[2]);
-#endif
-*/
 /*
 glGenBuffers(1, &ctx -> ebo);
 glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ctx -> ebo);

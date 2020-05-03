@@ -2,24 +2,30 @@
 typedef int GLint;
 typedef unsigned int GLuint;
 typedef float GLfloat;
+typedef double GLdouble;
 
-
+typedef struct ScreenRes ScreenRes;
 typedef struct Coodinate_2D Coodinate_2D;
 typedef struct Coodinate_3D Coodinate_3D;
-
 typedef struct VertexArray_t VertexArray_t;
 typedef struct ArrayOfVertex_t ArrayOfVertex_t;
 typedef struct Context_t Context_t, *ContextType;
 
+// Window dimensions
+struct ScreenRes{
+ int width;
+ int height;
+};
+
 struct Coodinate_2D {
- GLfloat X;
- GLfloat Y;
+ GLdouble X;
+ GLdouble Y;
 };
 
 struct Coodinate_3D {
-  GLfloat X;
-  GLfloat Y;
-  GLfloat Z;
+  GLdouble X;
+  GLdouble Y;
+  GLdouble Z;
 };
 
 /* Array of GLfloat since float is different depending the system it's better to
@@ -63,6 +69,7 @@ struct Context_t {
   vec3 up;
   VertexArray_t VertexArray_s;
   ArrayOfVertex_t ArrayOfVertex_s;
+  ScreenRes ScreenRes;
 };
 
 /*  DATA TYPE management FUNCTIONS  */

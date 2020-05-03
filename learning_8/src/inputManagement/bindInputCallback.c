@@ -8,7 +8,16 @@
 
 
 #include "../objectManagement/includes/constructor.h"
+#include "../window/includes/windowManager.h"
 #include "../shadersManagement/includes/shadersManager.h"
+
+
+/*unused*/
+Context_t* contextInstance() {
+    static Context_t* openGL_ctx_instance;
+    return openGL_ctx_instance;
+}
+
 
 
 static void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
@@ -18,6 +27,20 @@ static void cursor_position_callback(GLFWwindow* window, double xpos, double ypo
  glfwGetCursorPos(window, &xpos, &ypos);
  */
  printf("cursor moved callback xpos: %f, ypos: %f\n", xpos, ypos);
+
+ Context_t* openGL_ctx = (Context_t *)glfwGetWindowUserPointer(window);
+
+ struct Coodinate_2D coordinate = getWindowMiddlePos(&openGL_ctx -> ScreenRes);
+
+ printf("cursor moved callback xpos: %f, ypos: %f\n", coordinate.X, coordinate.Y);
+
+  /*
+   add test to see if we're looking left, right, up, down, then evolve this into moving the camera in the direction the mouse is
+   might try simple first then add a percentage of rotation depending on the max/min value are and then rotate
+   ex: width 800 middle is at 400, so between 0 and 400 is left, 200 is 50% of rotation in the left direction then we're doing a 90° rotation
+   after testing that implementing an fps like camera with sensibility parameter will be the objective
+   ex: mouse at 200px 50% left then, sensitivity 50%, so 25% of the initial rotation will be done
+  */
 }
 
 

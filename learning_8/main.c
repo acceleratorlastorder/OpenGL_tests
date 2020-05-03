@@ -9,9 +9,9 @@
 
 #include "includes/include.h"
 
-#include "src/window/includes/windowManager.h"
 #include "src/objectManagement/includes/opperation.h"
 #include "src/objectManagement/includes/constructor.h"
+#include "src/window/includes/windowManager.h"
 #include "src/shadersManagement/includes/shadersManager.h"
 #include "src/vertexManagement/includes/vertexs.h"
 #include "src/camera/includes/cameraManager.h"
@@ -20,7 +20,7 @@
 
 #include <sys/time.h>
 
-screenRes monitorRes;
+ScreenRes monitorRes;
 
 
 void moveCamera(Context_t *openGL_program_ctx){
@@ -176,6 +176,8 @@ int main(void) {
   printf("msBetweenFrame: %lf\n", msBetweenFrame);
 
   Context_t openGL_program_ctx;
+
+  openGL_program_ctx.ScreenRes = monitorRes;
 
   //Set a reference to the structure so we can use it wherever we are as long we can have window
   glfwSetWindowUserPointer(window, &openGL_program_ctx);

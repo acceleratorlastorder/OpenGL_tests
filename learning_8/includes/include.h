@@ -3,12 +3,6 @@
 #define usedVertex 1
 
 
-// Window dimensions
-typedef struct {
-  int width;
-  int height;
-} screenRes;
-
 char usableVertex[3][50];
 
 

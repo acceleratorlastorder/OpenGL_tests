@@ -87,6 +87,5 @@ GLuint loadBMP_custom(const char *imagepath, Context_t *ctx) {
 
 
 /*
-unsigned char getImageInMemory(unsigned char *data, unsigned int imageSize,
-                               FILE *file) {}
+unsigned char getImageInMemory(unsigned char *data, unsigned int imageSize, FILE *file) {}
 */

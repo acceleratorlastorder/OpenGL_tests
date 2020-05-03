@@ -71,13 +71,13 @@ void print_mat3(mat3 mat, signed short printMode){
       if (printMode == 0) {
         printf("  [%f], [%f], [%f]\n", mat[i][0], mat[i][1], mat[i][2]);
       }else{
-        printf("  [%f], [%f], [%f]\n", &mat[i][0], &mat[i][1], &mat[i][2]);
+        printf("  [%p], [%p], [%p]\n", &mat[i][0], &mat[i][1], &mat[i][2]);
       }
     }else{
       if (printMode == 0) {
         printf("  [%f], [%f], [%f],\n", mat[i][0], mat[i][1], mat[i][2]);
       }else{
-        printf("  [%f], [%f], [%f],\n", &mat[i][0], &mat[i][1], &mat[i][2]);
+        printf("  [%p], [%p], [%p],\n", &mat[i][0], &mat[i][1], &mat[i][2]);
       }
     }
   }

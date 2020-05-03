@@ -4,9 +4,23 @@ typedef unsigned int GLuint;
 typedef float GLfloat;
 
 
+typedef struct Coodinate_2D Coodinate_2D;
+typedef struct Coodinate_3D Coodinate_3D;
+
 typedef struct VertexArray_t VertexArray_t;
 typedef struct ArrayOfVertex_t ArrayOfVertex_t;
 typedef struct Context_t Context_t, *ContextType;
+
+struct Coodinate_2D {
+ GLfloat X;
+ GLfloat Y;
+};
+
+struct Coodinate_3D {
+  GLfloat X;
+  GLfloat Y;
+  GLfloat Z;
+};
 
 /* Array of GLfloat since float is different depending the system it's better to
  use GLfloat to increase the portability of the program*/

@@ -7,7 +7,7 @@ int get_kinetic_energy(int kg, int meter_per_sec){
 /**
  * [get_speed return the speed of an element]
  * @param distance [the distance in meter done]
- * @param interval [amount of seconds spent ]
+ * @param interval [amount of seconds spent]
  */
 int get_speed (int distance, int interval){
   /*v = distance/interval*/

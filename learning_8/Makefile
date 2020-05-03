@@ -31,7 +31,7 @@ compile: main.o
 		$(COMPILER) $(OBJECTS) $(CFLAGS)
 
 compact:
-		@echo "Compact mode used (might be the perf focused build, need later bench to prove this)"
+		@echo "Compact mode used"
 		$(COMPILER) main.c src/filesManagement/filesManager.c \
 		src/filesManagement/pictureManagement/getBmp_textures.c \
 		src/filesManagement/pictureManagement/pictureManagement.c \
@@ -44,10 +44,16 @@ compact:
 		src/glad.c \
 		$(CFLAGS)
 
+
+%.o: %.c
+	@echo "Compiling: [" $< "] into: [" $@ "]"
+	$(COMPILER) -o $@ -c $<
+
 main.o: filesManager.o getBmp_textures.o pictureManagement.o \
 				vertexs.o shadersManager.o texturesManagement.o \
 				opperation.o constructor.o physics.o glad.o
 	$(COMPILER) -o main.o -c main.c
+	
 filesManager.o:
 	@echo "Compiling filesManager"
 	$(COMPILER) -o filesManager.o -c src/filesManagement/filesManager.c

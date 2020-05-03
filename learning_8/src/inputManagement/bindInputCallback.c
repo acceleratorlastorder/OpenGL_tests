@@ -41,6 +41,29 @@ static void cursor_position_callback(GLFWwindow* window, double xpos, double ypo
    after testing that implementing an fps like camera with sensibility parameter will be the objective
    ex: mouse at 200px 50% left then, sensitivity 50%, so 25% of the initial rotation will be done
   */
+  bool isLeft = false;
+  bool isRight = false;
+  bool isUp = false;
+  bool isdown = false;
+
+  if (coordinate.X > xpos) {
+   isLeft = true;
+   printf("isLeft !\n");
+  }else if (coordinate.X < xpos) {
+   isRight = true;
+   printf("isRight !\n");
+  }
+  if (coordinate.Y < ypos) {
+   isUp = true;
+   printf("isUp !\n");
+  }else if (coordinate.Y > ypos) {
+   isdown = true;
+   printf("isdown !\n");
+  }
+
+
+
+  
 }
 
 
@@ -49,7 +72,7 @@ static void mouse_callback(GLFWwindow* window, int button, int action, int mods)
 {
  printf("yooo button: %d, action: %d, mods: %d\n", button, action, mods);
  if(button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS){
-  Context_t* openGL_ctx = (Context_t *)glfwGetWindowUserPointer(window);
+  /*Context_t* openGL_ctx = (Context_t *)glfwGetWindowUserPointer(window);*/
   printf("left !!!\n");
   /*getCenter(openGL_ctx -> center, window);*/
 

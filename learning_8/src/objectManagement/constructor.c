@@ -194,7 +194,7 @@ void ArrayOfVertex_t_initArray(struct ArrayOfVertex_t *self, size_t size) {
 
 /**
  *
- *
+ * Hardcoded for now
  */
 void init_mat4_with_GLM_MAT4_IDENTITY_INIT (mat4 matrice){
   matrice[0][0] = 1.0f;

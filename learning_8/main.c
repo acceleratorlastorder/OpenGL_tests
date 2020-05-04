@@ -258,7 +258,7 @@ int main(void) {
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glmc_rotate(openGL_program_ctx.position_model_mat, rad, normalvec3);
+    /*glmc_rotate(openGL_program_ctx.position_model_mat, rad, normalvec3);*/
     /*glUniformMatrix4fv(openGL_program_ctx.uniModel, 1, GL_FALSE, (float *)openGL_program_ctx.position_model_mat);*/
 
     /* Draw a rectangle from the 2 triangles using 6 indices */

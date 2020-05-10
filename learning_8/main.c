@@ -227,9 +227,10 @@ int main(void) {
 
   checkFrameBufferStatus();
 
+  /*
   float rad = glm_rad(5.0f);
   vec3 normalvec3 = {0.0f, 0.0f, 1.0f};
-
+  */
 
   while ((err = glGetError()) != GL_NO_ERROR) {
     printf("init process got OpenGL error: %d \n", err);

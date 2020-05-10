@@ -32,24 +32,20 @@ void setKeyboardLayout(keyboardLayout_t* newLayout){
 */
 
 GLfloat getRadiansFromDegrees(GLfloat degrees){
-   const GLfloat pi = 3.14159265359f;
+   /*const GLfloat pi = 3.14159265359f;*/
    /*near equivalent to (pi / 180)*/
    const GLfloat radiansConvert = 0.017453292519943295;
    return degrees * radiansConvert;
    /*return degrees * pi / 180;*/
 };
 
-/*
 struct Coodinate_3D get3DPositionForCursor(GLfloat yaw, GLfloat pitch){
-   GLfloat phi = cos(getRadiansFromDegrees(pitch)) * radius;
-
-   GLfloat X = cos(getRadiansFromDegrees(yaw)) * phi;
-   GLfloat Y = sin(getRadiansFromDegrees(pitch)) * radius;
-   GLfloat Z = sin(getRadiansFromDegrees(yaw)) * phi;
+   GLfloat X = cos(getRadiansFromDegrees(yaw)) * cos(getRadiansFromDegrees(pitch));
+   GLfloat Y = sin(getRadiansFromDegrees(pitch));
+   GLfloat Z = sin(getRadiansFromDegrees(yaw)) * cos(getRadiansFromDegrees(pitch));
 
    return (Coodinate_3D){X, Y, Z};
 };
-*/
 
 struct Coodinate_3D get3DPosition(GLfloat yaw, GLfloat pitch, GLfloat radius){
    GLfloat phi = cos(getRadiansFromDegrees(pitch)) * radius;
@@ -101,10 +97,6 @@ static void cursor_position_callback(GLFWwindow* window, double xpos, double ypo
    after testing that implementing an fps like camera with sensibility parameter will be the objective
    ex: mouse at 200px 50% left then, sensitivity 50%, so 25% of the initial rotation will be done
   */
-  bool isLeft = false;
-  bool isRight = false;
-  bool isUp = false;
-  bool isDown = false;
 
   static double lastXpos = 0;
   static double lastYpos = 0;
@@ -118,66 +110,39 @@ static void cursor_position_callback(GLFWwindow* window, double xpos, double ypo
 
   static GLfloat yaw = 0;
   static GLfloat pitch = 0;
-  static GLfloat roll = 0;
+  /*static GLfloat roll = 0;*/
   float sensitivity = 0.05;
 
   double xoffset = xpos - lastXpos;
   double yoffset = lastYpos - ypos;
 
-  lastXpos = xpos;
-  lastYpos = ypos;
+  lastXpos  = xpos;
+  lastYpos  = ypos;
 
-  xoffset *= sensitivity;
-  yoffset *= sensitivity;
+  xoffset  *= sensitivity;
+  yoffset  *= sensitivity;
 
-  yaw   += xoffset;
-  pitch += yoffset;
+  yaw      += xoffset;
+  pitch    += yoffset;
 
-
-
-
-
-  if (coordinate.X > xpos) {
-   isLeft = true;
-   printf("isLeft !\n");
-  }else if (coordinate.X < xpos) {
-   isRight = true;
-   printf("isRight !\n");
+  if(pitch > 89.0f){
+   pitch = 89.0f;
   }
-  if (coordinate.Y < ypos) {
-   isUp = true;
-   printf("isUp !\n");
-  }else if (coordinate.Y > ypos) {
-   isDown = true;
-   printf("isDown !\n");
+  if(pitch < -89.0f){
+   pitch = -89.0f;
   }
 
-  struct Coodinate_2D coordinate2D;
+
   struct Coodinate_3D coordinate3D;
-  GLfloat incrementFactor = 1.0f;
-
-
-  if (lastXpos > xpos) {
-   yaw -= incrementFactor;
-  }else{
-   yaw += incrementFactor;
-  }
-
-  if (lastYpos > ypos) {
-   pitch += incrementFactor;
-  }else{
-   pitch -= incrementFactor;
-  }
-
-  float radius = 10;
-  coordinate3D = get3DPosition(yaw, pitch, radius);
+  coordinate3D = get3DPositionForCursor(yaw, pitch);
 
   vec3 coordinateNormalised;
   coordinateNormalised[0] = coordinate3D.X;
   coordinateNormalised[1] = coordinate3D.Y;
   coordinateNormalised[2] = coordinate3D.Z;
 
-  glm_vec3_normalize(coordinateNormalised);
+
+  //glm_vec3_normalize(coordinateNormalised);
 
   openGL_ctx -> center[0]  = coordinateNormalised[0];
   openGL_ctx -> center[1]  = coordinateNormalised[1];
@@ -222,13 +187,10 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
     if(key == GLFW_KEY_RIGHT || key == GLFW_KEY_LEFT || key == GLFW_KEY_UP || key == GLFW_KEY_DOWN || key == GLFW_KEY_S || key == GLFW_KEY_W){
       Context_t* openGL_ctx = (Context_t *)glfwGetWindowUserPointer(window);
 
-      float pi = 3.14159265359f;
-
       static GLfloat yaw = 0;
       static GLfloat pitch = 0;
-      static GLfloat roll = 0;
+      /*static GLfloat roll = 0;*/
 
-      struct Coodinate_2D coordinate2D;
       struct Coodinate_3D coordinate3D;
 
       GLfloat incrementFactor = 5.0f;

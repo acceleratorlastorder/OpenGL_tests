@@ -301,7 +301,7 @@ int main(void) {
     printf("endLoopTime: %I64d\n", endLoopTime);
     */
     //printf("difftime %lf\n", difftime(endLoopTime, startLoopTime));
-    Sleep((1000/60) - difftime(endLoopTime, startLoopTime));
+    Sleep((1000/framePerSec) - difftime(endLoopTime, startLoopTime));
 
   }
 

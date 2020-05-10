@@ -120,7 +120,7 @@ void setShadersAttributes(Context_t *ctx) {
 
   ctx -> uniProj = glGetUniformLocation(ctx -> shaderProgram, "proj");
 
-  //ctx -> uniColor = glGetUniformLocation(ctx -> shaderProgram, "overrideColor");
+  ctx -> uniColor = glGetUniformLocation(ctx -> shaderProgram, "overrideColor");
 
 
   return;

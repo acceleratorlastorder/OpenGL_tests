@@ -10,7 +10,6 @@
 
 #include "../../objectManagement/includes/constructor.h"
 
-#include "includes/getBmp_textures.h"
 
 GLuint loadBMP_custom(const char *imagepath, Context_t *ctx) {
 
